@@ -3,9 +3,9 @@ exports.role = ["user"];
 exports.userFilterableFields = [
   "searchTerm",
   "email",
-  "name",
-  "phoneNumber",
-  "id",
+  "phone",
+  "firstname",
+  "lastname",
 ];
 
-exports.userSearchableFields = ["name", "email", "phoneNumber", "address"];
+exports.userSearchableFields = ["email", "phone", "firstname", "lastname"];

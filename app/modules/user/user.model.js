@@ -5,29 +5,26 @@ const config = require("../../../src/config");
 
 const userSchema = new Schema(
   {
-    name: {
-      type: String,
-      required: true,
-      trim: true,
-    },
     role: {
       type: String,
       enum: role,
       required: true,
     },
-    id: {
+    firstname: {
       type: String,
       required: true,
-      unique: true,
     },
-    phoneNumber: {
+    lastname: {
       type: String,
       required: true,
-      unique: true,
     },
     email: {
       type: String,
       required: true,
+      unique: true,
+    },
+    phone: {
+      type: String,
       unique: true,
     },
     password: {
@@ -35,12 +32,18 @@ const userSchema = new Schema(
       required: true,
       select: 0,
     },
+    isBlocked: {
+      type: Boolean,
+      default: false,
+    },
+    cart: {
+      type: Array,
+      default: [],
+    },
+    address: [{ type: Schema.Types.ObjectId, ref: "Address" }],
+    wishlist: [{ type: Schema.Types.ObjectId, ref: "Product" }],
     passwordChangedAt: {
       type: Date,
-    },
-    address: {
-      type: String,
-      required: true,
     },
   },
   {

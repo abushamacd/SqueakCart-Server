@@ -5,13 +5,11 @@ const {
 } = require("../../../src/helpers/paginationHelpers");
 const { userSearchableFields } = require("./user.constant");
 const User = require("./user.model");
-const { generateUserId } = require("./user.utils");
 const bcrypt = require("bcrypt");
 const config = require("../../../src/config");
 
 exports.createUserService = async (payload) => {
   payload.role = "user";
-  payload.id = await generateUserId();
   const user = await User.create(payload);
   if (!user) {
     throw new Error("User create failed");
@@ -90,24 +88,8 @@ exports.updateUserService = async (_id, payload) => {
     throw new ApiError(httpStatus.NOT_FOUND, "User not found !");
   }
 
-  const { role, id, password, ...userData } = payload;
+  const { role, password, isBlocked, ...userData } = payload;
   const updatedUserData = { ...userData };
-
-  // // dynamicallly handel object data. example: when name has include firstname and lastname
-  // if (name && Object.keys(name).length > 0) {
-  //   Object.keys(name).forEach((key) => {
-  //     const dataKey = `name.${key}`;
-  //     updatedUserData[dataKey] = name[key];
-  //   });
-  // }
-
-  if (password) {
-    const dataKey = `password`;
-    updatedUserData[dataKey] = await bcrypt.hash(
-      password,
-      Number(config.bcrypt_solt_round)
-    );
-  }
 
   const result = await User.findOneAndUpdate({ _id }, updatedUserData, {
     new: true,
