@@ -7,6 +7,9 @@ module.exports = {
   port: process.env.PORT,
   db_uri: process.env.DB_URI,
   bcrypt_solt_round: process.env.BCRYPT_SOLT_ROUND,
+  server_url: process.env.SERVER_URL,
+  mail_id: process.env.MAIL_ID,
+  mail_pass: process.env.MAIL_PASS,
   jwt: {
     secret: process.env.JWT_SECRET,
     refresh_secret: process.env.JWT_REFRESH_SECRET,

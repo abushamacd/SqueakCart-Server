@@ -22,10 +22,26 @@ exports.refreshTokenZod = z.object({
 exports.changePasswordZod = z.object({
   body: z.object({
     oldPassword: z.string({
-      required_error: "Old password is required",
+      required_error: "Zod: Old password is required",
     }),
     newPassword: z.string({
-      required_error: "New password is required",
+      required_error: "Zod: New password is required",
+    }),
+  }),
+});
+
+exports.forgetPasswordZod = z.object({
+  body: z.object({
+    email: z.string({
+      required_error: "Zod: Email is required",
+    }),
+  }),
+});
+
+exports.resetPasswordZod = z.object({
+  body: z.object({
+    password: z.string({
+      required_error: "Zod: Password is required",
     }),
   }),
 });

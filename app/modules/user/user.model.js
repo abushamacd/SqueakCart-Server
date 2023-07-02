@@ -45,6 +45,12 @@ const userSchema = new Schema(
     passwordChangedAt: {
       type: Date,
     },
+    passwordResetToken: {
+      type: String,
+    },
+    passwordResetExpires: {
+      type: Date,
+    },
   },
   {
     timestamps: true,
@@ -58,7 +64,7 @@ const userSchema = new Schema(
 userSchema.statics.isExist = async function (email) {
   return await User.findOne(
     { email },
-    { email: 1, password: 1, role: 1, id: 1, _id: 1 }
+    { email: 1, password: 1, role: 1, _id: 1 }
   );
 };
 
@@ -69,6 +75,17 @@ userSchema.statics.isPasswordMatched = async function (
 ) {
   return await bcrypt.compare(givenPassword, savedPassword);
 };
+
+// Reset password token
+// userSchema.statics.createPasswordResetToken = async function () {
+//   const resetToken = crypto.randomBytes(64).toString("hex");
+//   this.passwordResetToken = crypto
+//     .createHash("sha256")
+//     .update(resetToken)
+//     .digest("hex");
+//   this.passwordResetExpires = Date.now() + 30 * 60 * 1000;
+//   return resetToken;
+// };
 
 // Password Encrypt
 userSchema.pre("save", async function (next) {

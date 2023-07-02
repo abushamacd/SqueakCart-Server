@@ -9,3 +9,4 @@ yarn.lock
 *.log
 *.log.*
 *audit.json
+*.txt
