@@ -7,6 +7,8 @@ const {
   getBlogService,
   updateBlogService,
   deleteBlogService,
+  likeBlogService,
+  dislikeBlogService,
 } = require("./blog.services");
 const { pick } = require("../../../src/utilities/pick");
 const { blogFilterableFields } = require("./blog.constant");
@@ -63,6 +65,30 @@ exports.deleteBlog = tryCatch(async (req, res) => {
     statusCode: httpStatus.OK,
     success: true,
     message: "Blog delete successfully",
+    data: result,
+  });
+});
+
+exports.likeBlog = tryCatch(async (req, res) => {
+  const { blogId } = req.body;
+  const loginUserId = req?.user?._id;
+  const result = await likeBlogService(blogId, loginUserId);
+  sendRes(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Blog like/unlike successfully",
+    data: result,
+  });
+});
+
+exports.dislikeBlog = tryCatch(async (req, res) => {
+  const { blogId } = req.body;
+  const loginUserId = req?.user?._id;
+  const result = await dislikeBlogService(blogId, loginUserId);
+  sendRes(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Blog dislike/undislike successfully",
     data: result,
   });
 });

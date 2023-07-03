@@ -9,7 +9,11 @@ exports.createBlogService = async (payload) => {
   if (!blog) {
     throw new Error("Blog create failed");
   }
-  const result = await Blog.findById(blog._id).populate("category");
+  const result = await Blog.findById(blog._id).populate([
+    "category",
+    "likes",
+    "dislikes",
+  ]);
   return result;
 };
 
@@ -53,7 +57,7 @@ exports.getBlogsService = async (paginationOptions, filters) => {
     andConditions.length > 0 ? { $and: andConditions } : {};
   // output
   const result = await Blog.find(whereConditions)
-    .populate("category")
+    .populate(["category", "likes", "dislikes"])
     .sort(sortConditions)
     .skip(skip)
     .limit(limit);
@@ -70,18 +74,119 @@ exports.getBlogsService = async (paginationOptions, filters) => {
 };
 
 exports.getBlogService = async (id) => {
-  const result = await Blog.findById(id).populate("category");
+  const result = await Blog.findById(id).populate([
+    "category",
+    "likes",
+    "dislikes",
+  ]);
   return result;
 };
 
 exports.updateBlogService = async (id, payload) => {
   const result = await Blog.findByIdAndUpdate(id, payload, {
     new: true,
-  }).populate("category");
+  }).populate(["category", "likes", "dislikes"]);
   return result;
 };
 
 exports.deleteBlogService = async (id) => {
-  const result = await Blog.findByIdAndDelete(id).populate("category");
+  const result = await Blog.findByIdAndDelete(id).populate([
+    "category",
+    "likes",
+    "dislikes",
+  ]);
   return result;
+};
+
+exports.likeBlogService = async (blogId, loginUserId) => {
+  const blog = await Blog.findById(blogId);
+  const isLiked = blog?.isLiked;
+  const alreadyDisliked = blog?.dislikes.find(
+    (userId) => userId.toString() === loginUserId.toString()
+  );
+
+  if (alreadyDisliked) {
+    const blog = await Blog.findByIdAndUpdate(
+      blogId,
+      {
+        $pull: { dislikes: loginUserId },
+        isDisliked: false,
+      },
+      {
+        new: true,
+      }
+    ).populate(["category", "likes", "dislikes"]);
+  }
+
+  if (isLiked) {
+    const blog = await Blog.findByIdAndUpdate(
+      blogId,
+      {
+        $pull: { likes: loginUserId },
+        isLiked: false,
+      },
+      {
+        new: true,
+      }
+    ).populate(["category", "likes", "dislikes"]);
+    return blog;
+  } else {
+    const blog = await Blog.findByIdAndUpdate(
+      blogId,
+      {
+        $push: { likes: loginUserId },
+        isLiked: true,
+      },
+      {
+        new: true,
+      }
+    ).populate(["category", "likes", "dislikes"]);
+    return blog;
+  }
+};
+
+exports.dislikeBlogService = async (blogId, loginUserId) => {
+  const blog = await Blog.findById(blogId);
+  const isDisliked = blog?.isDisliked;
+  const alreadyLiked = blog?.likes.find(
+    (userId) => userId.toString() === loginUserId.toString()
+  );
+  if (alreadyLiked) {
+    const blog = await Blog.findByIdAndUpdate(
+      blogId,
+      {
+        $pull: { likes: loginUserId },
+        isLiked: false,
+      },
+      {
+        new: true,
+      }
+    );
+  }
+
+  if (isDisliked) {
+    const blog = await Blog.findByIdAndUpdate(
+      blogId,
+      {
+        $pull: { dislikes: loginUserId },
+        isDisliked: false,
+      },
+      {
+        new: true,
+      }
+    ).populate(["category", "likes", "dislikes"]);
+    return blog;
+  } else {
+    const blog = await Blog.findByIdAndUpdate(
+      blogId,
+      {
+        $push: { dislikes: loginUserId },
+        isDisliked: true,
+      },
+      {
+        new: true,
+      }
+    ).populate(["category", "likes", "dislikes"]);
+    return blog;
+  }
 };

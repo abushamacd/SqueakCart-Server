@@ -9,9 +9,29 @@ const {
   getBlog,
   updateBlog,
   deleteBlog,
+  likeBlog,
+  dislikeBlog,
 } = require("./blog.controller");
 
 const router = express.Router();
+
+router
+  .route("/likes")
+  /**
+   * @api {patch} /likes
+   * @apiDescription like blog
+   * @apiPermission all
+   */
+  .patch(auth(USER_ROLE.USER, USER_ROLE.ADMIN), likeBlog);
+
+router
+  .route("/dislikes")
+  /**
+   * @api {patch} /likes
+   * @apiDescription like blog
+   * @apiPermission all
+   */
+  .patch(auth(USER_ROLE.USER, USER_ROLE.ADMIN), dislikeBlog);
 
 router
   .route("/")
