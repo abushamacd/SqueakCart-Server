@@ -1,3 +1,3 @@
 exports.proCatFilterableFields = ["searchTerm", "title"];
 
-exports.proCatSearchableFields = [, "title"];
+exports.proCatSearchableFields = ["title"];

@@ -1,3 +1,3 @@
 exports.couponFilterableFields = ["searchTerm", "title"];
 
-exports.couponSearchableFields = [, "title"];
+exports.couponSearchableFields = ["title"];

@@ -1,3 +1,3 @@
 exports.blogCatFilterableFields = ["searchTerm", "title"];
 
-exports.blogCatSearchableFields = [, "title"];
+exports.blogCatSearchableFields = ["title"];

@@ -5,7 +5,7 @@ const {
   cloudInaryUploadImg,
   cloudInaryDeleteImg,
 } = require("../../../src/utilities/cloudinary");
-const { blogSearchableFields } = require("./blog.constant");
+const { blogSearchableFields, blogPopulate } = require("./blog.constant");
 const Blog = require("./blog.model");
 
 exports.createBlogService = async (payload) => {
@@ -61,7 +61,7 @@ exports.getBlogsService = async (paginationOptions, filters) => {
     andConditions.length > 0 ? { $and: andConditions } : {};
   // output
   const result = await Blog.find(whereConditions)
-    .populate(["category", "likes", "dislikes"])
+    .populate(blogPopulate)
     .sort(sortConditions)
     .skip(skip)
     .limit(limit);
@@ -78,18 +78,18 @@ exports.getBlogsService = async (paginationOptions, filters) => {
 };
 
 exports.getBlogService = async (id) => {
-  const result = await Blog.findById(id).populate([
-    "category",
-    "likes",
-    "dislikes",
-  ]);
+  const result = await Blog.findByIdAndUpdate(
+    { _id: id },
+    { $inc: { views: 1 } },
+    { new: true }
+  ).populate(blogPopulate);
   return result;
 };
 
 exports.updateBlogService = async (id, payload) => {
   const result = await Blog.findByIdAndUpdate(id, payload, {
     new: true,
-  }).populate(["category", "likes", "dislikes"]);
+  }).populate(blogPopulate);
   return result;
 };
 
@@ -119,7 +119,7 @@ exports.likeBlogService = async (blogId, loginUserId) => {
       {
         new: true,
       }
-    ).populate(["category", "likes", "dislikes"]);
+    ).populate(blogPopulate);
   }
 
   if (isLiked) {
@@ -132,7 +132,7 @@ exports.likeBlogService = async (blogId, loginUserId) => {
       {
         new: true,
       }
-    ).populate(["category", "likes", "dislikes"]);
+    ).populate(blogPopulate);
     return blog;
   } else {
     const blog = await Blog.findByIdAndUpdate(
@@ -144,7 +144,7 @@ exports.likeBlogService = async (blogId, loginUserId) => {
       {
         new: true,
       }
-    ).populate(["category", "likes", "dislikes"]);
+    ).populate(blogPopulate);
     return blog;
   }
 };
@@ -178,7 +178,7 @@ exports.dislikeBlogService = async (blogId, loginUserId) => {
       {
         new: true,
       }
-    ).populate(["category", "likes", "dislikes"]);
+    ).populate(blogPopulate);
     return blog;
   } else {
     const blog = await Blog.findByIdAndUpdate(
@@ -190,7 +190,7 @@ exports.dislikeBlogService = async (blogId, loginUserId) => {
       {
         new: true,
       }
-    ).populate(["category", "likes", "dislikes"]);
+    ).populate(blogPopulate);
     return blog;
   }
 };
