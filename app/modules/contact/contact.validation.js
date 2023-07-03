@@ -20,3 +20,13 @@ exports.createContactZod = z.object({
     }),
   }),
 });
+
+exports.updateContactZod = z.object({
+  body: z.object({
+    name: z.string().optional(),
+    email: z.string().optional(),
+    mobile: z.string().optional(),
+    comment: z.string().optional(),
+    status: z.enum([...status]).optional(),
+  }),
+});
