@@ -3,6 +3,7 @@ const router = express.Router();
 const userRoute = require("../modules/user/user.route");
 const authRoute = require("../modules/auth/auth.route");
 const contactRoute = require("../modules/contact/contact.route");
+const colorRoute = require("../modules/color/color.route");
 
 const appRoutes = [
   {
@@ -16,6 +17,10 @@ const appRoutes = [
   {
     path: "/contact",
     route: contactRoute,
+  },
+  {
+    path: "/color",
+    route: colorRoute,
   },
 ];
 
