@@ -1,19 +1,19 @@
 const {
   calculatePagination,
 } = require("../../../src/helpers/paginationHelpers");
-const { colorSearchableFields } = require("./color.constant");
-const Color = require("./color.model");
+const { couponSearchableFields } = require("./coupon.constant");
+const Coupon = require("./coupon.model");
 
-exports.createColorService = async (payload) => {
-  const color = await Color.create(payload);
-  if (!color) {
-    throw new Error("Color create failed");
+exports.createCouponService = async (payload) => {
+  const coupon = await Coupon.create(payload);
+  if (!coupon) {
+    throw new Error("Coupon create failed");
   }
-  const result = await Color.findById(color._id);
+  const result = await Coupon.findById(coupon._id);
   return result;
 };
 
-exports.getColorsService = async (paginationOptions, filters) => {
+exports.getCouponsService = async (paginationOptions, filters) => {
   const { page, limit, skip, sortBy, sortOrder } =
     calculatePagination(paginationOptions);
   const { searchTerm, ...filtersData } = filters;
@@ -22,7 +22,7 @@ exports.getColorsService = async (paginationOptions, filters) => {
   // search on the field
   if (searchTerm) {
     andConditions.push({
-      $or: colorSearchableFields.map((field) => ({
+      $or: couponSearchableFields.map((field) => ({
         [field]: {
           $regex: searchTerm,
           $options: "i",
@@ -52,13 +52,13 @@ exports.getColorsService = async (paginationOptions, filters) => {
   const whereConditions =
     andConditions.length > 0 ? { $and: andConditions } : {};
   // output
-  const result = await Color.find(whereConditions)
+  const result = await Coupon.find(whereConditions)
     .populate("")
     .sort(sortConditions)
     .skip(skip)
     .limit(limit);
 
-  const total = await Color.countDocuments(whereConditions);
+  const total = await Coupon.countDocuments(whereConditions);
   return {
     meta: {
       page,
@@ -69,19 +69,19 @@ exports.getColorsService = async (paginationOptions, filters) => {
   };
 };
 
-exports.getColorService = async (id) => {
-  const result = await Color.findById(id);
+exports.getCouponService = async (id) => {
+  const result = await Coupon.findById(id);
   return result;
 };
 
-exports.updateColorService = async (id, payload) => {
-  const result = await Color.findByIdAndUpdate(id, payload, {
+exports.updateCouponService = async (id, payload) => {
+  const result = await Coupon.findByIdAndUpdate(id, payload, {
     new: true,
   });
   return result;
 };
 
-exports.deleteColorService = async (id) => {
-  const result = await Color.findByIdAndDelete(id);
+exports.deleteCouponService = async (id) => {
+  const result = await Coupon.findByIdAndDelete(id);
   return result;
 };

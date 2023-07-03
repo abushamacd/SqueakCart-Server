@@ -4,6 +4,7 @@ const userRoute = require("../modules/user/user.route");
 const authRoute = require("../modules/auth/auth.route");
 const contactRoute = require("../modules/contact/contact.route");
 const colorRoute = require("../modules/color/color.route");
+const couponRoute = require("../modules/coupon/coupon.route");
 
 const appRoutes = [
   {
@@ -21,6 +22,10 @@ const appRoutes = [
   {
     path: "/color",
     route: colorRoute,
+  },
+  {
+    path: "/coupon",
+    route: couponRoute,
   },
 ];
 

@@ -2,14 +2,14 @@ const express = require("express");
 const { reqValidate } = require("../../../src/middleware/reqValidate");
 const { USER_ROLE } = require("../../../src/constants/user");
 const { auth } = require("../../../src/middleware/auth");
-const { createColorZod, updateColorZod } = require("./color.validation");
+const { createCouponZod, updateCouponZod } = require("./coupon.validation");
 const {
-  createColor,
-  getColors,
-  getColor,
-  updateColor,
-  deleteColor,
-} = require("./color.controller");
+  createCoupon,
+  getCoupons,
+  getCoupon,
+  updateCoupon,
+  deleteCoupon,
+} = require("./coupon.controller");
 
 const router = express.Router();
 
@@ -17,37 +17,37 @@ router
   .route("/")
   /**
    * @api {post} /
-   * @apiDescription create color
+   * @apiDescription create contact
    * @apiPermission all
    **/
-  .post(reqValidate(createColorZod), createColor)
+  .post(reqValidate(createCouponZod), createCoupon)
   /**
    * @api {get} /
-   * @apiDescription ger all colors
+   * @apiDescription ger all contacts
    * @apiPermission all
    **/
-  // .get(auth(USER_ROLE.ADMIN), createColor);
-  .get(getColors);
+  // .get(auth(USER_ROLE.ADMIN), createCoupon);
+  .get(getCoupons);
 
 router
   .route("/:id")
   /**
    * @api {get} /
-   * @apiDescription get a single color
+   * @apiDescription get a single contact
    * @apiPermission all
    **/
-  .get(getColor)
+  .get(getCoupon)
   /**
    * @api {patch} /
-   * @apiDescription update a single color
+   * @apiDescription update a single contact
    * @apiPermission all
    **/
-  .patch(reqValidate(updateColorZod), updateColor)
+  .patch(reqValidate(updateCouponZod), updateCoupon)
   /**
    * @api {delete} /
-   * @apiDescription delete a single color
+   * @apiDescription delete a single contact
    * @apiPermission all
    **/
-  .delete(deleteColor);
+  .delete(deleteCoupon);
 
 module.exports = router;
