@@ -11,7 +11,13 @@ const {
   deleteBlog,
   likeBlog,
   dislikeBlog,
+  uploadImages,
+  deleteImages,
 } = require("./blog.controller");
+const {
+  uploadFile,
+  blogImageResize,
+} = require("../../../src/middleware/uploadImages");
 
 const router = express.Router();
 
@@ -32,6 +38,34 @@ router
    * @apiPermission all
    */
   .patch(auth(USER_ROLE.USER, USER_ROLE.ADMIN), dislikeBlog);
+
+router
+  .route("/upload-img")
+  /**
+   * @api {post} /upload-img
+   * @apiDescription upload blog image
+   * @apiPermission admin
+   */
+  .post(
+    // auth(USER_ROLE.ADMIN),
+    uploadFile.array("images", 5),
+    blogImageResize,
+    uploadImages
+  );
+
+router
+  .route("/delete-img/:id")
+  /**
+   * @api {post} //delete-img/image_id
+   * @apiDescription delete blog image
+   * @apiPermission admin
+   */
+  .delete(
+    // auth(USER_ROLE.ADMIN),
+    uploadFile.array("images", 10),
+    blogImageResize,
+    deleteImages
+  );
 
 router
   .route("/")

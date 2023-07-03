@@ -1,6 +1,10 @@
 const {
   calculatePagination,
 } = require("../../../src/helpers/paginationHelpers");
+const {
+  cloudInaryUploadImg,
+  cloudInaryDeleteImg,
+} = require("../../../src/utilities/cloudinary");
 const { blogSearchableFields } = require("./blog.constant");
 const Blog = require("./blog.model");
 
@@ -189,4 +193,25 @@ exports.dislikeBlogService = async (blogId, loginUserId) => {
     ).populate(["category", "likes", "dislikes"]);
     return blog;
   }
+};
+
+exports.blogImageUploadService = async (files) => {
+  const uploader = (path) => cloudInaryUploadImg(path, "images");
+  const urls = [];
+  for (const file of files) {
+    const { path } = file;
+    let newPath = await uploader(path);
+    urls.push(newPath);
+    fs.unlinkSync(path);
+  }
+  const images = urls?.map((file) => {
+    return file;
+  });
+
+  return images;
+};
+
+exports.blogImageDeleteService = async (id, files) => {
+  const deleted = await cloudInaryDeleteImg(id, "images");
+  return deleted;
 };
