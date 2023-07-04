@@ -117,3 +117,60 @@ exports.productImageDeleteService = async (id, files) => {
   const deleted = await cloudInaryDeleteImg(id, "images");
   return deleted;
 };
+
+exports.ratingService = async (id, payload) => {
+  const { star, productId, comment } = payload;
+  const product = await Product.findById(productId);
+  let aleardyRated = product.ratings.find(
+    (userId) => userId.postedby.toString() === id.toString()
+  );
+  // individuals rating handle
+  if (aleardyRated) {
+    const updateRating = await Product.updateOne(
+      {
+        ratings: { $elemMatch: aleardyRated },
+      },
+      {
+        $set: { "ratings.$.star": star, "ratings.$.comment": comment },
+      },
+      {
+        new: true,
+      }
+    );
+  } else {
+    const rateProduct = await Product.findByIdAndUpdate(
+      productId,
+      {
+        $push: {
+          ratings: {
+            star: star,
+            comment: comment,
+            postedby: id,
+          },
+        },
+      },
+      {
+        new: true,
+      }
+    );
+  }
+
+  // handle total rating
+  const getAllRatings = await Product.findById(productId);
+  let totalRatting = getAllRatings.ratings.length;
+  let ratingSum = getAllRatings.ratings
+    .map((item) => item.star)
+    .reduce((previous, current) => previous + current, 0);
+  let newRating = Math.round(ratingSum / totalRatting);
+  let ratedProduct = await Product.findByIdAndUpdate(
+    productId,
+    {
+      totalrating: newRating,
+    },
+    {
+      new: true,
+    }
+  ).populate(productPopulate);
+
+  return ratedProduct;
+};

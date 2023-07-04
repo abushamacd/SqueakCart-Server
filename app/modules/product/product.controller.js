@@ -9,6 +9,7 @@ const {
   deleteProductService,
   productImageUploadService,
   productImageDeleteService,
+  ratingService,
 } = require("./product.services");
 const { pick } = require("../../../src/utilities/pick");
 const { productFilterableFields } = require("./product.constant");
@@ -88,6 +89,17 @@ exports.deleteImages = tryCatch(async (req, res) => {
     statusCode: httpStatus.OK,
     success: true,
     message: "Product image delete successfully",
+    data: result,
+  });
+});
+
+exports.rating = tryCatch(async (req, res) => {
+  const { _id } = req.user;
+  const result = await ratingService(_id, req.body);
+  sendRes(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Product rating successfully",
     data: result,
   });
 });

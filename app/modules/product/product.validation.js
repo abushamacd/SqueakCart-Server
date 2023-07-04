@@ -43,3 +43,14 @@ exports.updateProductZod = z.object({
     brand: z.string().optional().array().optional(),
   }),
 });
+
+exports.ratingZod = z.object({
+  body: z.object({
+    star: z.number({
+      required_error: "Zod: Rating star is required",
+    }),
+    productId: z.string({
+      required_error: "Zod: Product is is required",
+    }),
+  }),
+});

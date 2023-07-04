@@ -31,6 +31,8 @@ exports.updateUserZod = z.object({
 
 exports.wishlistZod = z.object({
   body: z.object({
-    productId: z.string().optional(),
+    productId: z.string({
+      required_error: "Zod: Product id is required",
+    }),
   }),
 });

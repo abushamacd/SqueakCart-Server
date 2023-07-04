@@ -2,7 +2,11 @@ const express = require("express");
 const { reqValidate } = require("../../../src/middleware/reqValidate");
 const { USER_ROLE } = require("../../../src/constants/user");
 const { auth } = require("../../../src/middleware/auth");
-const { createProductZod, updateProductZod } = require("./product.validation");
+const {
+  createProductZod,
+  updateProductZod,
+  ratingZod,
+} = require("./product.validation");
 const {
   createProduct,
   getProducts,
@@ -11,6 +15,7 @@ const {
   deleteProduct,
   uploadImages,
   deleteImages,
+  rating,
 } = require("./product.controller");
 const {
   uploadFile,
@@ -18,6 +23,15 @@ const {
 } = require("../../../src/middleware/uploadImages");
 
 const router = express.Router();
+
+router
+  .route("/rating")
+  /**
+   * @api {patch} /rating
+   * @apiDescription give prodcut rating
+   * @apiPermission all
+   */
+  .patch(reqValidate(ratingZod), auth(USER_ROLE.ADMIN, USER_ROLE.USER), rating);
 
 router
   .route("/upload-img")
