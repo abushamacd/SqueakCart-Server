@@ -7,6 +7,7 @@ const {
   getSingleUserService,
   updateUserService,
   deleteUserService,
+  addToWishListService,
 } = require("./user.services");
 const { paginationFields } = require("../../../src/constants/pagination");
 const { pick } = require("../../../src/utilities/pick");
@@ -65,6 +66,18 @@ exports.deleteUser = tryCatch(async (req, res) => {
     statusCode: httpStatus.OK,
     success: true,
     message: "User delete successfully",
+    data: result,
+  });
+});
+
+exports.addToWishList = tryCatch(async (req, res) => {
+  const { _id } = req.user;
+  const { productId } = req.body;
+  const result = await addToWishListService(_id, productId);
+  sendRes(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Product add to wishlist successfully",
     data: result,
   });
 });

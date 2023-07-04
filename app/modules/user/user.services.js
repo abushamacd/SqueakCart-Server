@@ -3,7 +3,7 @@ const { ApiError } = require("../../../src/errors/apiError");
 const {
   calculatePagination,
 } = require("../../../src/helpers/paginationHelpers");
-const { userSearchableFields } = require("./user.constant");
+const { userSearchableFields, userPopulate } = require("./user.constant");
 const User = require("./user.model");
 const bcrypt = require("bcrypt");
 const config = require("../../../src/config");
@@ -14,7 +14,7 @@ exports.createUserService = async (payload) => {
   if (!user) {
     throw new Error("User create failed");
   }
-  const result = await User.findById(user._id);
+  const result = await User.findById(user._id).populate(userPopulate);
   return result;
 };
 
@@ -58,7 +58,7 @@ exports.getAllUsersService = async (paginationOptions, filters) => {
     andConditions.length > 0 ? { $and: andConditions } : {};
   // output
   const result = await User.find(whereConditions)
-    .populate("")
+    .populate(userPopulate)
     .sort(sortConditions)
     .skip(skip)
     .limit(limit);
@@ -75,7 +75,7 @@ exports.getAllUsersService = async (paginationOptions, filters) => {
 };
 
 exports.getSingleUserService = async (id) => {
-  const result = await User.findById(id);
+  const result = await User.findById(id).populate(userPopulate);
   if (!result) {
     throw new Error("User not found !");
   }
@@ -93,7 +93,7 @@ exports.updateUserService = async (_id, payload) => {
 
   const result = await User.findOneAndUpdate({ _id }, updatedUserData, {
     new: true,
-  });
+  }).populate(userPopulate);
 
   if (!result) {
     throw new Error("User update failed");
@@ -108,10 +108,40 @@ exports.deleteUserService = async (id) => {
     throw new ApiError(httpStatus.NOT_FOUND, "User not found !");
   }
 
-  const result = await User.findByIdAndDelete(id);
+  const result = await User.findByIdAndDelete(id).populate(userPopulate);
 
   if (!result) {
     throw new Error("User delete failed");
   }
   return result;
+};
+
+exports.addToWishListService = async (id, productId) => {
+  const user = await User.findById(id);
+  const alreadyAdded = user.wishlist.find(
+    (id) => id.toString() === productId.toString()
+  );
+  if (alreadyAdded) {
+    let user = await User.findByIdAndUpdate(
+      id,
+      {
+        $pull: { wishlist: productId },
+      },
+      {
+        new: true,
+      }
+    ).populate(userPopulate);
+    return user;
+  } else {
+    let user = await User.findByIdAndUpdate(
+      id,
+      {
+        $push: { wishlist: productId },
+      },
+      {
+        new: true,
+      }
+    ).populate(userPopulate);
+    return user;
+  }
 };

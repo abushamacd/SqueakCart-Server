@@ -28,7 +28,7 @@ router
    */
   .post(
     // auth(USER_ROLE.ADMIN),
-    uploadFile.array("images", 5),
+    uploadFile.array("images", 10),
     productImageResize,
     uploadImages
   );

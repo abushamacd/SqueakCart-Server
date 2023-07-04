@@ -28,3 +28,9 @@ exports.updateUserZod = z.object({
     email: z.string().optional(),
   }),
 });
+
+exports.wishlistZod = z.object({
+  body: z.object({
+    productId: z.string().optional(),
+  }),
+});

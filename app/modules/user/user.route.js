@@ -1,14 +1,34 @@
 const express = require("express");
 const { reqValidate } = require("../../../src/middleware/reqValidate");
-const { createUserZod, updateUserZod } = require("./user.validation");
+const {
+  createUserZod,
+  updateUserZod,
+  wishlistZod,
+} = require("./user.validation");
 const {
   createUser,
   getAllUsers,
   getSingleUser,
   updateUser,
   deleteUser,
+  addToWishList,
 } = require("./user.controller");
+const { USER_ROLE } = require("../../../src/constants/user");
+const { auth } = require("../../../src/middleware/auth");
 const router = express.Router();
+
+router
+  .route("/wishlist")
+  /**
+   * @api {patch} /wishlist
+   * @apiDescription create user
+   * @apiPermission all
+   **/
+  .patch(
+    auth(USER_ROLE.ADMIN, USER_ROLE.USER),
+    reqValidate(wishlistZod),
+    addToWishList
+  );
 
 router
   .route("/")
