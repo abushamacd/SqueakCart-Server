@@ -40,8 +40,18 @@ const userSchema = new Schema(
       type: Array,
       default: [],
     },
-    address: [{ type: Schema.Types.ObjectId, ref: "Address" }],
-    wishlist: [{ type: Schema.Types.ObjectId, ref: "Product" }],
+    address: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Address",
+      },
+    ],
+    wishlist: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Product",
+      },
+    ],
     passwordChangedAt: {
       type: Date,
     },

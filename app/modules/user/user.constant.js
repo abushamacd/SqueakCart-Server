@@ -7,4 +7,4 @@ exports.userFilterableFields = [
   "lastname",
 ];
 exports.userSearchableFields = ["email", "phone", "firstname", "lastname"];
-exports.userPopulate = ["cart", "wishlist"];
+exports.userPopulate = ["cart", "address", "wishlist"];
