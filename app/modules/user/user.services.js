@@ -145,3 +145,8 @@ exports.addToWishListService = async (id, productId) => {
     return user;
   }
 };
+
+exports.getWishListService = async (id) => {
+  const populate = await User.findById(id).populate("wishlist");
+  return populate;
+};

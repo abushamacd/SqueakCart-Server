@@ -8,6 +8,7 @@ const {
   updateUserService,
   deleteUserService,
   addToWishListService,
+  getWishListService,
 } = require("./user.services");
 const { paginationFields } = require("../../../src/constants/pagination");
 const { pick } = require("../../../src/utilities/pick");
@@ -78,6 +79,17 @@ exports.addToWishList = tryCatch(async (req, res) => {
     statusCode: httpStatus.OK,
     success: true,
     message: "Product add to wishlist successfully",
+    data: result,
+  });
+});
+
+exports.getWishList = tryCatch(async (req, res) => {
+  const { _id } = req.user;
+  const result = await getWishListService(_id);
+  sendRes(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Get product wishlist successfully",
     data: result,
   });
 });

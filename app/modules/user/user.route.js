@@ -12,6 +12,7 @@ const {
   updateUser,
   deleteUser,
   addToWishList,
+  getWishList,
 } = require("./user.controller");
 const { USER_ROLE } = require("../../../src/constants/user");
 const { auth } = require("../../../src/middleware/auth");
@@ -21,14 +22,20 @@ router
   .route("/wishlist")
   /**
    * @api {patch} /wishlist
-   * @apiDescription create user
+   * @apiDescription add product to wishlist
    * @apiPermission all
    **/
   .patch(
     auth(USER_ROLE.ADMIN, USER_ROLE.USER),
     reqValidate(wishlistZod),
     addToWishList
-  );
+  )
+  /**
+   * @api {get} /wishlist
+   * @apiDescription add product from wishlist
+   * @apiPermission all
+   **/
+  .get(auth(USER_ROLE.ADMIN, USER_ROLE.USER), getWishList);
 
 router
   .route("/")
