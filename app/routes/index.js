@@ -11,6 +11,7 @@ const proCatRoute = require("../modules/proCat/proCat.route");
 const blogRoute = require("../modules/blog/blog.route");
 const productRoute = require("../modules/product/product.route");
 const addressRoute = require("../modules/address/address.route");
+const cartRoute = require("../modules/cart/cart.route");
 
 const appRoutes = [
   {
@@ -56,6 +57,10 @@ const appRoutes = [
   {
     path: "/address",
     route: addressRoute,
+  },
+  {
+    path: "/cart",
+    route: cartRoute,
   },
 ];
 
