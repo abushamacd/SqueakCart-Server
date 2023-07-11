@@ -9,6 +9,14 @@ const bcrypt = require("bcrypt");
 const config = require("../../../src/config");
 
 exports.createUserService = async (payload) => {
+  const isExistEmail = await User.isExist(payload.email);
+  if (isExistEmail) {
+    throw new Error("Email already use");
+  }
+  const isExistPhone = await User.find({ phone: payload.phone });
+  if (isExistPhone.length > 0) {
+    throw new Error("Phone number already use");
+  }
   payload.role = "user";
   const user = await User.create(payload);
   if (!user) {
