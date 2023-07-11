@@ -9,6 +9,7 @@ const {
   deleteCartService,
   clearCartService,
   removeFromCartService,
+  handleQuantityService,
 } = require("./cart.services");
 const { pick } = require("../../../src/utilities/pick");
 const { cartFilterableFields } = require("./cart.constant");
@@ -53,6 +54,19 @@ exports.removeFromCart = tryCatch(async (req, res) => {
   const { id } = req?.params;
   const { color } = req?.body;
   const result = await removeFromCartService(_id, id, color);
+  sendRes(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Remove this varient successfully",
+    data: result,
+  });
+});
+
+exports.handleQuantity = tryCatch(async (req, res) => {
+  const { _id } = req?.user;
+  const { id } = req?.params;
+  const result = await handleQuantityService(_id, id, req?.body);
+
   sendRes(res, {
     statusCode: httpStatus.OK,
     success: true,

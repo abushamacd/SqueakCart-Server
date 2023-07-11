@@ -86,12 +86,71 @@ exports.removeFromCartService = async (id, productId, color) => {
     0
   );
 
-  const savedCart = await Cart.findByIdAndUpdate(userCart._id, {
-    products,
-    cartTotal,
-    orderBy: id,
-  });
+  const result = await Cart.findByIdAndUpdate(
+    userCart._id,
+    {
+      products,
+      cartTotal,
+      orderBy: id,
+    },
+    {
+      new: true,
+    }
+  ).populate(cartPopulate);
+  return result;
+};
 
-  const result = await Cart.findById(savedCart._id).populate(cartPopulate);
+exports.handleQuantityService = async (id, productId, payload) => {
+  let products = [];
+  const { color, status } = payload;
+  const userCart = await Cart.findOne({ orderBy: id });
+  const allProducts = userCart.products;
+  const allVarients = allProducts.filter(
+    (product) => product.productId.valueOf() === productId
+  );
+  const remainsVarients = allVarients.filter(
+    (product) => product.color !== color
+  );
+  products = [...remainsVarients];
+  const matchVarients = allVarients.filter(
+    (product) => product.color === color
+  );
+
+  // quantity handle
+  if (status === "increase") {
+    matchVarients[0].count += 1;
+    products = [...products, ...matchVarients];
+  } else {
+    if (matchVarients[0].count > 1) {
+      matchVarients[0].count -= 1;
+      products = [...products, ...matchVarients];
+    }
+  }
+
+  const remainsProducts = allProducts.filter(
+    (obj1) =>
+      !products.some(
+        (obj2) => obj1.productId.valueOf() === obj2.productId.valueOf()
+      )
+  );
+  products = [...products, ...remainsProducts];
+
+  const cartTotal = products.reduce(
+    (total, product) => total + product.price * product.count,
+    0
+  );
+
+  const result = await Cart.findByIdAndUpdate(
+    userCart._id,
+    {
+      products,
+      cartTotal,
+      orderBy: id,
+    },
+    {
+      new: true,
+    }
+  ).populate(cartPopulate);
+
   return result;
 };

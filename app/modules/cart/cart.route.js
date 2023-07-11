@@ -6,8 +6,13 @@ const {
   getCart,
   clearCart,
   removeFromCart,
+  handleQuantity,
 } = require("./cart.controller");
-const { createCartZod, removeFromCartZod } = require("./cart.validation");
+const {
+  createCartZod,
+  updateCartZod: updateCartZod,
+  handleQuantityCartZod,
+} = require("./cart.validation");
 const { reqValidate } = require("../../../src/middleware/reqValidate");
 
 const router = express.Router();
@@ -40,14 +45,27 @@ router
 router
   .route("/:id")
   /**
-   * @api {post} /
-   * @apiDescription create cart
+   * @api {patch} /:product id
+   * @apiDescription remove a product varient from cart
    * @apiPermission all
    **/
   .patch(
     auth(USER_ROLE.ADMIN, USER_ROLE.USER),
-    reqValidate(removeFromCartZod),
+    reqValidate(updateCartZod),
     removeFromCart
+  );
+
+router
+  .route("/cartQuantity/:id")
+  /**
+   * @api {patch} /:product id
+   * @apiDescription remove a product varient from cart
+   * @apiPermission all
+   **/
+  .patch(
+    auth(USER_ROLE.ADMIN, USER_ROLE.USER),
+    reqValidate(handleQuantityCartZod),
+    handleQuantity
   );
 
 module.exports = router;

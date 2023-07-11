@@ -1,4 +1,5 @@
 const { z } = require("zod");
+const { status } = require("./cart.constant");
 
 exports.createCartZod = z.object({
   body: z.object({
@@ -17,10 +18,21 @@ exports.createCartZod = z.object({
   }),
 });
 
-exports.removeFromCartZod = z.object({
+exports.updateCartZod = z.object({
   body: z.object({
     color: z.string({
       required_error: "Zod: Color is required",
+    }),
+  }),
+});
+
+exports.handleQuantityCartZod = z.object({
+  body: z.object({
+    color: z.string({
+      required_error: "Zod: Color is required",
+    }),
+    status: z.enum([...status], {
+      required_error: "Zod: Status is required",
     }),
   }),
 });
