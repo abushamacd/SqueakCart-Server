@@ -3,114 +3,175 @@ const {
 } = require("../../../src/helpers/paginationHelpers");
 const Product = require("../product/product.model");
 const User = require("../user/user.model");
-const { cartSearchableFields } = require("./cart.constant");
+const { cartSearchableFields, cartPopulate } = require("./cart.constant");
 const Cart = require("./cart.model");
 
 exports.createCartService = async (id, payload) => {
-  // console.log(payload);
+  // const user = await User.findById(id);
+  // if (!user) {
+  //   throw new Error("User is deleted");
+  // }
   // let products = [];
-  const user = await User.findById(id);
-  const alreadyAdded = await Cart.find({ orderby: user._id }).populate(
-    "orderby"
+  // let cartTotal = 0;
+  // let result = null;
+  // const { productId, count, color, price } = payload;
+  // const userCart = await Cart.findOne({ orderBy: user._id });
+  // const allProducts = userCart.products;
+
+  // if (userCart) {
+  //   console.log("old cart");
+  //   const allVarients = allProducts.filter(
+  //     (product) => product.productId.valueOf() === productId
+  //   );
+  //   if (allVarients.length > 0) {
+  //     console.log("old product");
+  //     const remainsVarients = allVarients.filter(
+  //       (product) => product.color !== color
+  //     );
+  //     products.push(payload);
+  //     products.push(...remainsVarients);
+
+  //     const remainsProducts = allProducts.filter((obj1) => {
+  //       return products.some(
+  //         (obj2) => obj1.productId.valueOf() !== obj2.productId.valueOf()
+  //       );
+  //     });
+  //     products.push(...remainsProducts);
+  //   } else {
+  //     console.log("new product");
+  //     products.push(payload);
+  //     products.push(...allProducts);
+  //   }
+
+  //   for (let i = 0; i < products.length; i++) {
+  //     cartTotal = cartTotal + products[i].price * products[i].count;
+  //   }
+
+  //   const savedCart = await Cart.findByIdAndUpdate(userCart._id, {
+  //     products,
+  //     cartTotal,
+  //     orderBy: id,
+  //   });
+
+  //   result = await Cart.findById(savedCart._id).populate(cartPopulate);
+  // } else {
+  //   console.log("new cart");
+  //   products.push(payload);
+  //   for (let i = 0; i < products.length; i++) {
+  //     cartTotal = cartTotal + products[i].price * products[i].count;
+  //   }
+  //   const savedCart = await new Cart({
+  //     products,
+  //     cartTotal,
+  //     orderBy: id,
+  //   }).save();
+
+  //   result = await Cart.findById(savedCart._id).populate(cartPopulate);
+  // }
+
+  let products = [];
+
+  const { productId, count, color, price } = payload;
+  const userCart = await Cart.findOne({ orderBy: id });
+  const allProducts = userCart ? userCart.products : [];
+
+  const allVarients = allProducts.filter(
+    (product) => product.productId.valueOf() === productId
+  );
+  const remainsVarients = allVarients.filter(
+    (product) => product.color !== color
   );
 
-  console.log(alreadyAdded);
-  if (alreadyAdded) {
-  }
-  // for (let i = 0; i < payload.length; i++) {
-  //   let item = {};
-  //   item.product = payload[i]._id;
-  //   item.count = payload[i].count;
-  //   item.color = payload[i].color;
-  //   let getPrice = await Product.findById(payload[i]._id)
-  //     .select("price")
-  //     .exec();
-  //   item.price = getPrice.price;
-  //   products.push(item);
-  // }
-  // let cartTotal = 0;
-  // for (let i = 0; i < products.length; i++) {
-  //   cartTotal = cartTotal + products[i].price * products[i].count;
-  // }
+  products = [payload, ...remainsVarients];
+  const remainsProducts = allProducts.filter(
+    (obj1) =>
+      !products.some(
+        (obj2) => obj1.productId.valueOf() === obj2.productId.valueOf()
+      )
+  );
 
-  // let newcart = await new Cart({
-  //   products,
-  //   cartTotal,
-  //   orderby: user?._id,
-  // }).save();
+  products = [...products, ...remainsProducts];
 
-  return alreadyAdded;
-};
+  let cartTotal = products.reduce(
+    (total, product) => total + product.price * product.count,
+    0
+  );
 
-exports.getCartsService = async (paginationOptions, filters) => {
-  const { page, limit, skip, sortBy, sortOrder } =
-    calculatePagination(paginationOptions);
-  const { searchTerm, ...filtersData } = filters;
-  let andConditions = [];
-
-  // search on the field
-  if (searchTerm) {
-    andConditions.push({
-      $or: cartSearchableFields.map((field) => ({
-        [field]: {
-          $regex: searchTerm,
-          $options: "i",
-        },
-      })),
-    });
-  }
-
-  // filtering on field
-  if (Object.keys(filtersData).length) {
-    andConditions.push({
-      $and: Object.entries(filtersData).map(([field, value]) => ({
-        [field]: {
-          $regex: value,
-          $options: "i",
-        },
-      })),
-    });
-  }
-
-  // sorting
-  let sortConditions = {};
-  if (sortBy && sortOrder) {
-    sortConditions[sortBy] = sortOrder;
-  }
-
-  const whereConditions =
-    andConditions.length > 0 ? { $and: andConditions } : {};
-  // output
-  const result = await Cart.find(whereConditions)
-    .populate("")
-    .sort(sortConditions)
-    .skip(skip)
-    .limit(limit);
-
-  const total = await Cart.countDocuments(whereConditions);
-  return {
-    meta: {
-      page,
-      limit,
-      total,
-    },
-    data: result,
+  const cartData = {
+    products,
+    cartTotal,
+    orderBy: id,
   };
+
+  const savedCart = userCart
+    ? await Cart.findByIdAndUpdate(userCart._id, cartData)
+    : await new Cart(cartData).save();
+
+  const result = await Cart.findById(savedCart._id).populate(cartPopulate);
+
+  return result;
 };
 
 exports.getCartService = async (id) => {
-  const result = await Cart.findById(id);
+  const result = await Cart.find({ orderBy: id }).populate(cartPopulate);
   return result;
 };
 
-exports.updateCartService = async (id, payload) => {
-  const result = await Cart.findByIdAndUpdate(id, payload, {
-    new: true,
-  });
+exports.clearCartService = async (id) => {
+  const result = await Cart.findOneAndDelete({ orderBy: id }).populate(
+    cartPopulate
+  );
   return result;
 };
 
-exports.deleteCartService = async (id) => {
-  const result = await Cart.findByIdAndDelete(id);
+exports.removeFromCartService = async (id, productId, color) => {
+  const user = await User.findById(id);
+  if (!user) {
+    throw new Error("User is deleted");
+  }
+  let products = [];
+  let cartTotal = 0;
+  let result = null;
+  const userCart = await Cart.findOne({ orderBy: user._id });
+  const allProducts = userCart.products;
+
+  if (userCart) {
+    console.log("old cart");
+    const allVarients = allProducts.filter(
+      (product) => product.productId.valueOf() === productId
+    );
+    if (allVarients.length > 0) {
+      console.log("old product");
+      const remainsVarients = allVarients.filter(
+        (product) => product.color !== color
+      );
+      products.push(payload);
+      products.push(...remainsVarients);
+
+      const remainsProducts = allProducts.filter((obj1) => {
+        return products.some(
+          (obj2) => obj1.productId.valueOf() !== obj2.productId.valueOf()
+        );
+      });
+      products.push(...remainsProducts);
+    } else {
+      console.log("new product");
+      products.push(payload);
+      products.push(...allProducts);
+    }
+
+    for (let i = 0; i < products.length; i++) {
+      cartTotal = cartTotal + products[i].price * products[i].count;
+    }
+
+    const savedCart = await Cart.findByIdAndUpdate(userCart._id, {
+      products,
+      cartTotal,
+      orderBy: id,
+    });
+
+    result = await Cart.findById(savedCart._id).populate(cartPopulate);
+  }
+
   return result;
 };

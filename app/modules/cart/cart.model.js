@@ -4,7 +4,7 @@ const cartSchema = new Schema(
   {
     products: [
       {
-        product: {
+        productId: {
           type: Schema.Types.ObjectId,
           ref: "Product",
           required: true,
@@ -13,9 +13,13 @@ const cartSchema = new Schema(
           type: Number,
           required: true,
         },
+        // color: {
+        //   type: Schema.Types.ObjectId,
+        //   ref: "Color",
+        //   required: true,
+        // },
         color: {
-          type: Schema.Types.ObjectId,
-          ref: "Color",
+          type: String,
           required: true,
         },
         price: {
@@ -27,10 +31,9 @@ const cartSchema = new Schema(
     cartTotal: {
       type: Number,
     },
-    orderby: {
+    orderBy: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      required: true,
     },
   },
   {

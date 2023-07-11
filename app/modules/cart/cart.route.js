@@ -1,15 +1,14 @@
 const express = require("express");
-const { reqValidate } = require("../../../src/middleware/reqValidate");
 const { USER_ROLE } = require("../../../src/constants/user");
 const { auth } = require("../../../src/middleware/auth");
-const { createCartZod, updateCartZod } = require("./cart.validation");
 const {
   createCart,
-  getCarts,
   getCart,
-  updateCart,
-  deleteCart,
+  clearCart,
+  removeFromCart,
 } = require("./cart.controller");
+const { createCartZod, removeFromCartZod } = require("./cart.validation");
+const { reqValidate } = require("../../../src/middleware/reqValidate");
 
 const router = express.Router();
 
@@ -22,36 +21,33 @@ router
    **/
   .post(
     auth(USER_ROLE.ADMIN, USER_ROLE.USER),
-    // reqValidate(createCartZod),
+    reqValidate(createCartZod),
     createCart
   )
   /**
    * @api {get} /
-   * @apiDescription ger all carts
+   * @apiDescription get user's cart
    * @apiPermission all
    **/
-  // .get(auth(USER_ROLE.ADMIN), createCart);
-  .get(getCarts);
+  .get(auth(USER_ROLE.ADMIN, USER_ROLE.USER), getCart)
+  /**
+   * @api {delete} /
+   * @apiDescription clear user's cart
+   * @apiPermission all
+   **/
+  .delete(auth(USER_ROLE.ADMIN, USER_ROLE.USER), clearCart);
 
 router
   .route("/:id")
   /**
-   * @api {get} /
-   * @apiDescription get a single cart
+   * @api {post} /
+   * @apiDescription create cart
    * @apiPermission all
    **/
-  .get(getCart)
-  /**
-   * @api {patch} /
-   * @apiDescription update a single cart
-   * @apiPermission all
-   **/
-  .patch(reqValidate(updateCartZod), updateCart)
-  /**
-   * @api {delete} /
-   * @apiDescription delete a single cart
-   * @apiPermission all
-   **/
-  .delete(deleteCart);
+  .patch(
+    auth(USER_ROLE.ADMIN, USER_ROLE.USER),
+    reqValidate(removeFromCartZod),
+    removeFromCart
+  );
 
 module.exports = router;

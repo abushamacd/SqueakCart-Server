@@ -7,6 +7,8 @@ const {
   getCartService,
   updateCartService,
   deleteCartService,
+  clearCartService,
+  removeFromCartService,
 } = require("./cart.services");
 const { pick } = require("../../../src/utilities/pick");
 const { cartFilterableFields } = require("./cart.constant");
@@ -24,21 +26,9 @@ exports.createCart = tryCatch(async (req, res) => {
   });
 });
 
-exports.getCarts = tryCatch(async (req, res) => {
-  const paginationOptions = pick(req.query, paginationFields);
-  const filters = pick(req.query, cartFilterableFields);
-  const result = await getCartsService(paginationOptions, filters);
-  sendRes(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "Carts retrived successfully",
-    data: result,
-  });
-});
-
 exports.getCart = tryCatch(async (req, res) => {
-  const { id } = req.params;
-  const result = await getCartService(id);
+  const { _id } = req?.user;
+  const result = await getCartService(_id);
   sendRes(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -47,24 +37,26 @@ exports.getCart = tryCatch(async (req, res) => {
   });
 });
 
-exports.updateCart = tryCatch(async (req, res) => {
-  const { id } = req.params;
-  const result = await updateCartService(id, req.body);
+exports.clearCart = tryCatch(async (req, res) => {
+  const { _id } = req?.user;
+  const result = await clearCartService(_id);
   sendRes(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Cart update successfully",
+    message: "Clear cart successfully",
     data: result,
   });
 });
 
-exports.deleteCart = tryCatch(async (req, res) => {
-  const { id } = req.params;
-  const result = await deleteCartService(id);
+exports.removeFromCart = tryCatch(async (req, res) => {
+  const { _id } = req?.user;
+  const { id } = req?.params;
+  const { color } = req?.body;
+  const result = await removeFromCartService(_id, id, color);
   sendRes(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Cart delete successfully",
+    message: "Remove this varient successfully",
     data: result,
   });
 });
