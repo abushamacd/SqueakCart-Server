@@ -75,7 +75,7 @@ exports.removeFromCartService = async (id, productId, color) => {
 
   const remainsProducts = allProducts.filter(
     (obj1) =>
-      !products.some(
+      !allVarients.some(
         (obj2) => obj1.productId.valueOf() === obj2.productId.valueOf()
       )
   );
