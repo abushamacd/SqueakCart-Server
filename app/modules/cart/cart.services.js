@@ -82,10 +82,35 @@ exports.getCartService = async (id) => {
 };
 
 exports.clearCartService = async (id) => {
-  const result = await Cart.findOneAndDelete({ orderBy: id }).populate(
-    cartPopulate
-  );
-  return result;
+  const user = await User.findById(id);
+  const session = await mongoose.startSession();
+  try {
+    session.startTransaction();
+
+    const result = await Cart.findOneAndDelete({ orderBy: id }).populate(
+      cartPopulate
+    );
+
+    const alreadyAdded = user.cart.find(
+      (id) => id.toString() === result._id.valueOf().toString()
+    );
+    if (alreadyAdded) {
+      await User.findByIdAndUpdate(
+        id,
+        {
+          $pull: { cart: result._id },
+        },
+        {
+          new: true,
+        }
+      );
+    }
+
+    return result;
+  } catch (error) {
+    session.abortTransaction();
+    throw error;
+  }
 };
 
 exports.removeFromCartService = async (id, productId, color) => {
