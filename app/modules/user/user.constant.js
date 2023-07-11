@@ -7,4 +7,20 @@ exports.userFilterableFields = [
   "lastname",
 ];
 exports.userSearchableFields = ["email", "phone", "firstname", "lastname"];
-exports.userPopulate = ["cart", "address", "wishlist"];
+exports.userPopulate = [
+  "address",
+  "wishlist",
+  {
+    path: "cart",
+    populate: [
+      {
+        path: "products",
+        populate: [
+          {
+            path: "productId",
+          },
+        ],
+      },
+    ],
+  },
+];

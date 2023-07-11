@@ -1,3 +1,4 @@
+const { default: mongoose } = require("mongoose");
 const {
   calculatePagination,
 } = require("../../../src/helpers/paginationHelpers");
@@ -9,6 +10,7 @@ const Cart = require("./cart.model");
 exports.createCartService = async (id, payload) => {
   let products = [];
   const { productId, count, color, price } = payload;
+  const user = await User.findById(id);
   const userCart = await Cart.findOne({ orderBy: id });
   const allProducts = userCart ? userCart.products : [];
 
@@ -40,13 +42,38 @@ exports.createCartService = async (id, payload) => {
     orderBy: id,
   };
 
-  const savedCart = userCart
-    ? await Cart.findByIdAndUpdate(userCart._id, cartData)
-    : await new Cart(cartData).save();
+  // throw new Error("stop");
 
-  const result = await Cart.findById(savedCart._id).populate(cartPopulate);
+  const session = await mongoose.startSession();
+  try {
+    session.startTransaction();
 
-  return result;
+    const savedCart = userCart
+      ? await Cart.findByIdAndUpdate(userCart._id, cartData)
+      : await new Cart(cartData).save();
+
+    const alreadyAdded = user.cart.find(
+      (id) => id.toString() === savedCart._id.valueOf().toString()
+    );
+    if (!alreadyAdded) {
+      await User.findByIdAndUpdate(
+        id,
+        {
+          $push: { cart: savedCart._id },
+        },
+        {
+          new: true,
+        }
+      );
+    }
+
+    const result = await Cart.findById(savedCart._id).populate(cartPopulate);
+
+    return result;
+  } catch (error) {
+    session.abortTransaction();
+    throw error;
+  }
 };
 
 exports.getCartService = async (id) => {
