@@ -15,7 +15,10 @@ exports.createAddressService = async (id, payload) => {
 };
 
 exports.getAddressesService = async (id) => {
-  const result = await Address.find({ userId: id }).populate("userId");
+  let sortConditions = { createdAt: "desc" };
+  const result = await Address.find({ userId: id })
+    .populate("userId")
+    .sort(sortConditions);
   return result;
 };
 

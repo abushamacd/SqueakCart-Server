@@ -91,7 +91,7 @@ exports.changePasswordService = async (payload, user) => {
     isUserExist.password &&
     !(await User.isPasswordMatched(oldPassword, isUserExist.password))
   ) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, "Password is incorrect");
+    throw new ApiError(httpStatus.UNAUTHORIZED, "Old password is incorrect");
   }
 
   // hass
@@ -382,7 +382,7 @@ exports.forgetPasswordService = async (email) => {
                                         <div class="v-text-align"
                                           style="line-height: 140%; text-align: left; word-wrap: break-word;">
                                           <p style="font-size: 14px; line-height: 140%;"><span
-                                              style="font-size: 18px; line-height: 25.2px; color: #666666;">Hello, ${user.lastname} </span></p>
+                                              style="font-size: 18px; line-height: 25.2px; color: #666666;">Hello, ${user.firstname} ${user.lastname} </span></p>
                                           <p style="font-size: 14px; line-height: 140%;"> </p>
                                           <p style="font-size: 14px; line-height: 140%;"><span
                                               style="font-size: 18px; line-height: 25.2px; color: #666666;">We have sent you this
@@ -410,7 +410,7 @@ exports.forgetPasswordService = async (email) => {
                                         <!--[if mso]><style>.v-button {background: transparent !important;}</style><![endif]-->
                                         <div class="v-text-align" align="left">
                                           <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="" style="height:52px; v-text-anchor:middle; width:205px;" arcsize="19%"  stroke="f" fillcolor="#131921"><w:anchorlock/><center style="color:#FFFFFF;font-family:'Lato',sans-serif;"><![endif]-->
-                                          <a href="${config.server_url}/api/v1/auth/reset-password/${token}" target="_blank" class="v-button"
+                                          <a href="${config.client_url}/reset/${token}" target="_blank" class="v-button"
                                             style="box-sizing: border-box;display: inline-block;font-family:'Lato',sans-serif;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #131921; border-radius: 10px;-webkit-border-radius: 10px; -moz-border-radius: 10px; width:auto; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-size: 18px;">
                                             <span style="display:block;padding:15px 40px;line-height:120%;"><span
                                                 style="line-height: 21.6px;">Reset Password</span></span>
@@ -795,7 +795,6 @@ exports.resetPasswordService = async (token, password) => {
   user.passwordResetToken = null;
   user.passwordResetExpires = null;
   const savedUser = await User.findByIdAndUpdate(user._id, user, { new: true });
-  // const changedUser = await user.save();
   return savedUser;
 };
 

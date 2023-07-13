@@ -7,7 +7,7 @@ module.exports = {
   port: process.env.PORT,
   db_uri: process.env.DB_URI,
   bcrypt_solt_round: process.env.BCRYPT_SOLT_ROUND,
-  server_url: process.env.SERVER_URL,
+  client_url: process.env.CLIENT_URL,
   mail_id: process.env.MAIL_ID,
   mail_pass: process.env.MAIL_PASS,
   could_name: process.env.CLOUD_NAME,

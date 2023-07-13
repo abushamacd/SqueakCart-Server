@@ -13,10 +13,20 @@ const {
   deleteUser,
   addToWishList,
   getWishList,
+  getUserProfile,
 } = require("./user.controller");
 const { USER_ROLE } = require("../../../src/constants/user");
 const { auth } = require("../../../src/middleware/auth");
 const router = express.Router();
+
+router
+  .route("/profile")
+  /**
+   * @api {get} /profile
+   * @apiDescription add product to wishlist
+   * @apiPermission all
+   **/
+  .get(auth(USER_ROLE.ADMIN, USER_ROLE.USER), getUserProfile);
 
 router
   .route("/wishlist")

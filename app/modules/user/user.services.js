@@ -96,6 +96,17 @@ exports.updateUserService = async (_id, payload) => {
     throw new ApiError(httpStatus.NOT_FOUND, "User not found !");
   }
 
+  // Email and phone existency check in another user
+  const emailExist = await User.findOne({ email: payload.email });
+  if (isExist.email !== emailExist?.email && emailExist) {
+    throw new Error("Email is used in another user");
+  }
+
+  const phoneExist = await User.findOne({ phone: payload.phone });
+  if (isExist.phone !== phoneExist?.phone && phoneExist) {
+    throw new Error("Phone number is used in another user");
+  }
+
   const { role, password, isBlocked, ...userData } = payload;
   const updatedUserData = { ...userData };
 
@@ -156,5 +167,10 @@ exports.addToWishListService = async (id, productId) => {
 
 exports.getWishListService = async (id) => {
   const populate = await User.findById(id).populate("wishlist");
+  return populate;
+};
+
+exports.getUserProfileService = async (id) => {
+  const populate = await User.findById(id).populate(userPopulate);
   return populate;
 };

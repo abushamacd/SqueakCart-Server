@@ -42,20 +42,24 @@ router
 router
   .route("/change-password")
   /**
-   * @api {post} /
+   * @api {patch} /
    * @apiDescription create user
    * @apiPermission all
    **/
-  .post(reqValidate(changePasswordZod), changePassword);
+  .patch(
+    auth(USER_ROLE.ADMIN, USER_ROLE.USER),
+    reqValidate(changePasswordZod),
+    changePassword
+  );
 
 router
   .route("/forget-password")
   /**
-   * @api {get} /
+   * @api {patch} /
    * @apiDescription get all user
    * @apiPermission all
    */
-  .post(reqValidate(forgetPasswordZod), forgetPassword);
+  .patch(reqValidate(forgetPasswordZod), forgetPassword);
 
 router
   .route("/reset-password/:token")

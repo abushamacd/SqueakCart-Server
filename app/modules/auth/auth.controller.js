@@ -50,8 +50,7 @@ exports.refreshToken = tryCatch(async (req, res) => {
 });
 
 exports.changePassword = tryCatch(async (req, res) => {
-  const { ...passwordData } = req.body;
-  await changePasswordService(passwordData, req.user);
+  await changePasswordService(req.body, req.user);
   sendRes(res, {
     statusCode: 200,
     success: true,

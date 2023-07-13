@@ -9,6 +9,7 @@ const {
   deleteUserService,
   addToWishListService,
   getWishListService,
+  getUserProfileService,
 } = require("./user.services");
 const { paginationFields } = require("../../../src/constants/pagination");
 const { pick } = require("../../../src/utilities/pick");
@@ -90,6 +91,17 @@ exports.getWishList = tryCatch(async (req, res) => {
     statusCode: httpStatus.OK,
     success: true,
     message: "Get product wishlist successfully",
+    data: result,
+  });
+});
+
+exports.getUserProfile = tryCatch(async (req, res) => {
+  const { _id } = req.user;
+  const result = await getUserProfileService(_id);
+  sendRes(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User get successfully",
     data: result,
   });
 });
