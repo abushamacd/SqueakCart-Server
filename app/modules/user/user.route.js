@@ -14,6 +14,8 @@ const {
   addToWishList,
   getWishList,
   getUserProfile,
+  blockUser,
+  unblockUser,
 } = require("./user.controller");
 const { USER_ROLE } = require("../../../src/constants/user");
 const { auth } = require("../../../src/middleware/auth");
@@ -48,6 +50,24 @@ router
   .get(auth(USER_ROLE.ADMIN, USER_ROLE.USER), getWishList);
 
 router
+  .route("/block/:id")
+  /**
+   * @api {patch} /profile
+   * @apiDescription add product to wishlist
+   * @apiPermission all
+   **/
+  .patch(auth(USER_ROLE.ADMIN, USER_ROLE.USER), blockUser);
+
+router
+  .route("/unblock/:id")
+  /**
+   * @api {patch} /profile
+   * @apiDescription add product to wishlist
+   * @apiPermission all
+   **/
+  .patch(auth(USER_ROLE.ADMIN), unblockUser);
+
+router
   .route("/")
   /**
    * @api {post} /
@@ -60,10 +80,7 @@ router
    * @apiDescription get all user
    * @apiPermission admin
    **/
-  .get(
-    //   auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SELLER, ENUM_USER_ROLE.BUYER),
-    getAllUsers
-  );
+  .get(auth(USER_ROLE.ADMIN), getAllUsers);
 
 router
   .route("/:id")
@@ -72,18 +89,15 @@ router
    * @apiDescription get single user by
    * @apiPermission admin
    **/
-  .get(
-    // auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SELLER, ENUM_USER_ROLE.BUYER),
-    getSingleUser
-  )
+  .get(auth(USER_ROLE.ADMIN), getSingleUser)
   /**
    * @api {patch} /64a04b3a3babaf9f69752398
    * @apiDescription update single user by
    * @apiPermission admin
    **/
   .patch(
+    auth(USER_ROLE.ADMIN, USER_ROLE.USER),
     reqValidate(updateUserZod),
-    // auth(ENUM_USER_ROLE.SELLER),
     updateUser
   )
   /**
@@ -91,9 +105,6 @@ router
    * @apiDescription delete single user by
    * @apiPermission admin
    **/
-  .delete(
-    //   auth(ENUM_USER_ROLE.SELLER),
-    deleteUser
-  );
+  .delete(auth(USER_ROLE.ADMIN), deleteUser);
 
 module.exports = router;

@@ -10,6 +10,8 @@ const {
   addToWishListService,
   getWishListService,
   getUserProfileService,
+  blockUserService,
+  unblockUserService,
 } = require("./user.services");
 const { paginationFields } = require("../../../src/constants/pagination");
 const { pick } = require("../../../src/utilities/pick");
@@ -102,6 +104,28 @@ exports.getUserProfile = tryCatch(async (req, res) => {
     statusCode: httpStatus.OK,
     success: true,
     message: "User get successfully",
+    data: result,
+  });
+});
+
+exports.blockUser = tryCatch(async (req, res) => {
+  const { id } = req.params;
+  const result = await blockUserService(id);
+  sendRes(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User block successfully",
+    data: result,
+  });
+});
+
+exports.unblockUser = tryCatch(async (req, res) => {
+  const { id } = req.params;
+  const result = await unblockUserService(id);
+  sendRes(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User unblock successfully",
     data: result,
   });
 });

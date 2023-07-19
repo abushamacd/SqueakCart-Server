@@ -75,7 +75,6 @@ exports.getContactService = async (id) => {
 };
 
 exports.updateContactService = async (id, payload) => {
-  console.log(payload);
   const result = await Contact.findByIdAndUpdate(id, payload, {
     new: true,
   });

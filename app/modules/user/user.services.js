@@ -174,3 +174,45 @@ exports.getUserProfileService = async (id) => {
   const populate = await User.findById(id).populate(userPopulate);
   return populate;
 };
+
+exports.blockUserService = async (_id, payload) => {
+  const isExist = await User.findById(_id);
+  if (!isExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, "User not found !");
+  }
+
+  const result = await User.findOneAndUpdate(
+    { _id },
+    { isBlocked: true },
+    {
+      new: true,
+    }
+  ).populate(userPopulate);
+
+  if (!result) {
+    throw new Error("User block failed");
+  }
+
+  return result;
+};
+
+exports.unblockUserService = async (_id, payload) => {
+  const isExist = await User.findById(_id);
+  if (!isExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, "User not found !");
+  }
+
+  const result = await User.findOneAndUpdate(
+    { _id },
+    { isBlocked: false },
+    {
+      new: true,
+    }
+  ).populate(userPopulate);
+
+  if (!result) {
+    throw new Error("User unblock failed");
+  }
+
+  return result;
+};

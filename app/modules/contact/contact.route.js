@@ -26,8 +26,7 @@ router
    * @apiDescription ger all contacts
    * @apiPermission all
    **/
-  // .get(auth(USER_ROLE.ADMIN), createContact);
-  .get(getContacts);
+  .get(auth(USER_ROLE.ADMIN), getContacts);
 
 router
   .route("/:id")
@@ -36,18 +35,18 @@ router
    * @apiDescription get a single contact
    * @apiPermission all
    **/
-  .get(getContact)
+  .get(auth(USER_ROLE.ADMIN), getContact)
   /**
    * @api {patch} /
    * @apiDescription update a single contact
    * @apiPermission all
    **/
-  .patch(reqValidate(updateContactZod), updateContact)
+  .patch(auth(USER_ROLE.ADMIN), reqValidate(updateContactZod), updateContact)
   /**
    * @api {delete} /
    * @apiDescription delete a single contact
    * @apiPermission all
    **/
-  .delete(deleteContact);
+  .delete(auth(USER_ROLE.ADMIN), deleteContact);
 
 module.exports = router;
