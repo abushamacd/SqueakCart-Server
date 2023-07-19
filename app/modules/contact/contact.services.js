@@ -7,7 +7,7 @@ const Contact = require("./contact.model");
 exports.createContactService = async (payload) => {
   const contact = await Contact.create(payload);
   if (!contact) {
-    throw new Error("Contact create failed");
+    throw new Error("Message send failed");
   }
   const result = await Contact.findById(contact._id);
   return result;
@@ -75,6 +75,7 @@ exports.getContactService = async (id) => {
 };
 
 exports.updateContactService = async (id, payload) => {
+  console.log(payload);
   const result = await Contact.findByIdAndUpdate(id, payload, {
     new: true,
   });

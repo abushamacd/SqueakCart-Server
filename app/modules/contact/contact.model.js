@@ -11,11 +11,7 @@ const contactSchema = new Schema(
       type: String,
       required: true,
     },
-    mobile: {
-      type: String,
-      required: true,
-    },
-    comment: {
+    message: {
       type: String,
       required: true,
     },

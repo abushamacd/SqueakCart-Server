@@ -17,7 +17,7 @@ exports.createContact = tryCatch(async (req, res) => {
   sendRes(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Contact created successfully",
+    message: "Message send successfully",
     data: result,
   });
 });

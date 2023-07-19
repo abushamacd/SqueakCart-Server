@@ -9,14 +9,8 @@ exports.createContactZod = z.object({
     email: z.string({
       required_error: "Zod: Email is required",
     }),
-    mobile: z.string({
-      required_error: "Zod: Mobile is required",
-    }),
-    comment: z.string({
+    message: z.string({
       required_error: "Zod: Comment is required",
-    }),
-    status: z.enum([...status], {
-      required_error: "Zod: Status is required",
     }),
   }),
 });
@@ -25,8 +19,7 @@ exports.updateContactZod = z.object({
   body: z.object({
     name: z.string().optional(),
     email: z.string().optional(),
-    mobile: z.string().optional(),
-    comment: z.string().optional(),
+    message: z.string().optional(),
     status: z.enum([...status]).optional(),
   }),
 });
