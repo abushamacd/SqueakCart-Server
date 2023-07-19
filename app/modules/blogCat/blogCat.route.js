@@ -20,14 +20,13 @@ router
    * @apiDescription create blogCat
    * @apiPermission all
    **/
-  .post(reqValidate(createBlogCatZod), createBlogCat)
+  .post(auth(USER_ROLE.ADMIN), reqValidate(createBlogCatZod), createBlogCat)
   /**
    * @api {get} /
    * @apiDescription ger all blogCats
    * @apiPermission all
    **/
-  // .get(auth(USER_ROLE.ADMIN), createBlogCat);
-  .get(getBlogCats);
+  .get(auth(USER_ROLE.ADMIN), getBlogCats);
 
 router
   .route("/:id")
@@ -36,18 +35,18 @@ router
    * @apiDescription get a single blogCat
    * @apiPermission all
    **/
-  .get(getBlogCat)
+  .get(auth(USER_ROLE.ADMIN), getBlogCat)
   /**
    * @api {patch} /
    * @apiDescription update a single blogCat
    * @apiPermission all
    **/
-  .patch(reqValidate(updateBlogCatZod), updateBlogCat)
+  .patch(auth(USER_ROLE.ADMIN), reqValidate(updateBlogCatZod), updateBlogCat)
   /**
    * @api {delete} /
    * @apiDescription delete a single blogCat
    * @apiPermission all
    **/
-  .delete(deleteBlogCat);
+  .delete(auth(USER_ROLE.ADMIN), deleteBlogCat);
 
 module.exports = router;

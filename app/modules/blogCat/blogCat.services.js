@@ -7,7 +7,7 @@ const BlogCat = require("./blogCat.model");
 exports.createBlogCatService = async (payload) => {
   const blogCat = await BlogCat.create(payload);
   if (!blogCat) {
-    throw new Error("BlogCat create failed");
+    throw new Error("Blog category create failed");
   }
   const result = await BlogCat.findById(blogCat._id);
   return result;
@@ -83,5 +83,8 @@ exports.updateBlogCatService = async (id, payload) => {
 
 exports.deleteBlogCatService = async (id) => {
   const result = await BlogCat.findByIdAndDelete(id);
+  if (!result) {
+    throw new Error("Blog category delete failed");
+  }
   return result;
 };

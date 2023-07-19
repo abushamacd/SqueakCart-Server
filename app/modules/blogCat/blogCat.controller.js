@@ -17,7 +17,7 @@ exports.createBlogCat = tryCatch(async (req, res) => {
   sendRes(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "BlogCat created successfully",
+    message: "Blog category created successfully",
     data: result,
   });
 });
@@ -29,7 +29,7 @@ exports.getBlogCats = tryCatch(async (req, res) => {
   sendRes(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "BlogCats retrived successfully",
+    message: "Blog categorys retrived successfully",
     data: result,
   });
 });
@@ -40,7 +40,7 @@ exports.getBlogCat = tryCatch(async (req, res) => {
   sendRes(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "BlogCat retrived successfully",
+    message: "Blog category retrived successfully",
     data: result,
   });
 });
@@ -51,7 +51,7 @@ exports.updateBlogCat = tryCatch(async (req, res) => {
   sendRes(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "BlogCat update successfully",
+    message: "Blog category update successfully",
     data: result,
   });
 });
@@ -62,7 +62,7 @@ exports.deleteBlogCat = tryCatch(async (req, res) => {
   sendRes(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "BlogCat delete successfully",
+    message: "Blog category delete successfully",
     data: result,
   });
 });
