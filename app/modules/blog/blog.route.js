@@ -47,7 +47,7 @@ router
    * @apiPermission admin
    */
   .post(
-    // auth(USER_ROLE.ADMIN),
+    auth(USER_ROLE.ADMIN),
     uploadFile.array("images", 5),
     blogImageResize,
     uploadImages
@@ -56,12 +56,12 @@ router
 router
   .route("/delete-img/:id")
   /**
-   * @api {post} //delete-img/image_id
+   * @api {delete} //delete-img/image_id
    * @apiDescription delete blog image
    * @apiPermission admin
    */
   .delete(
-    // auth(USER_ROLE.ADMIN),
+    auth(USER_ROLE.ADMIN),
     uploadFile.array("images", 10),
     blogImageResize,
     deleteImages
@@ -74,7 +74,7 @@ router
    * @apiDescription create blog
    * @apiPermission all
    **/
-  .post(reqValidate(createBlogZod), createBlog)
+  .post(auth(USER_ROLE.ADMIN), reqValidate(createBlogZod), createBlog)
   /**
    * @api {get} /
    * @apiDescription ger all blogs
@@ -96,12 +96,12 @@ router
    * @apiDescription update a single blog
    * @apiPermission all
    **/
-  .patch(reqValidate(updateBlogZod), updateBlog)
+  .patch(auth(USER_ROLE.ADMIN), reqValidate(updateBlogZod), updateBlog)
   /**
    * @api {delete} /
    * @apiDescription delete a single blog
    * @apiPermission all
    **/
-  .delete(deleteBlog);
+  .delete(auth(USER_ROLE.ADMIN), deleteBlog);
 
 module.exports = router;
