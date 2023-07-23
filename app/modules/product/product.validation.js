@@ -16,6 +16,11 @@ exports.createProductZod = z.object({
         required_error: "Zod: Category is required",
       })
     ),
+    tag: z.array(
+      z.string({
+        required_error: "Zod: Tag is required",
+      })
+    ),
     quantity: z.number({
       required_error: "Zod: price is required",
     }),
@@ -24,11 +29,12 @@ exports.createProductZod = z.object({
         required_error: "Zod: color is required",
       })
     ),
-    brand: z.array(
-      z.string({
-        required_error: "Zod: brand is required",
-      })
-    ),
+    brand: z.string({
+      required_error: "Zod: brand is required",
+    }),
+    status: z.string({
+      required_error: "Zod: Status is required",
+    }),
   }),
 });
 
@@ -40,7 +46,8 @@ exports.updateProductZod = z.object({
     category: z.string().optional().array().optional(),
     quantity: z.number().optional(),
     color: z.string().optional().array().optional(),
-    brand: z.string().optional().array().optional(),
+    brand: z.string().optional(),
+    status: z.string().optional(),
   }),
 });
 

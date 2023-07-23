@@ -1,6 +1,7 @@
 const {
   calculatePagination,
 } = require("../../../src/helpers/paginationHelpers");
+const fs = require("fs");
 const {
   cloudInaryUploadImg,
   cloudInaryDeleteImg,

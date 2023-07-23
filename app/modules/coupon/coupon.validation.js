@@ -18,6 +18,6 @@ exports.updateCouponZod = z.object({
   body: z.object({
     title: z.string().optional(),
     date: z.string().optional(),
-    discount: z.string().optional(),
+    discount: z.number().optional(),
   }),
 });

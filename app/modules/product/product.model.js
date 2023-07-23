@@ -18,8 +18,7 @@ const productSchema = new Schema(
     },
     category: [
       {
-        type: Schema.Types.ObjectId,
-        ref: "ProCat",
+        type: String,
         required: true,
       },
     ],
@@ -39,8 +38,7 @@ const productSchema = new Schema(
     ],
     color: [
       {
-        type: Schema.Types.ObjectId,
-        ref: "Color",
+        type: String,
         required: true,
       },
     ],
@@ -49,8 +47,7 @@ const productSchema = new Schema(
     },
     brand: [
       {
-        type: Schema.Types.ObjectId,
-        ref: "Brand",
+        type: String,
         required: true,
       },
     ],
