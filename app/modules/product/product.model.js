@@ -18,7 +18,8 @@ const productSchema = new Schema(
     },
     category: [
       {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: "ProCat",
         required: true,
       },
     ],
@@ -38,19 +39,19 @@ const productSchema = new Schema(
     ],
     color: [
       {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: "Color",
         required: true,
       },
     ],
     tag: {
       type: Array,
     },
-    brand: [
-      {
-        type: String,
-        required: true,
-      },
-    ],
+    brand: {
+      type: Schema.Types.ObjectId,
+      ref: "Brand",
+      required: true,
+    },
     sold: {
       type: Number,
       default: 0,
