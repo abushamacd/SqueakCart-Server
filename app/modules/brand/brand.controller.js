@@ -7,6 +7,8 @@ const {
   getBrandService,
   updateBrandService,
   deleteBrandService,
+  brandImageUploadService,
+  brandImageDeleteService,
 } = require("./brand.services");
 const { pick } = require("../../../src/utilities/pick");
 const { brandFilterableFields } = require("./brand.constant");
@@ -63,6 +65,29 @@ exports.deleteBrand = tryCatch(async (req, res) => {
     statusCode: httpStatus.OK,
     success: true,
     message: "Brand delete successfully",
+    data: result,
+  });
+});
+
+exports.uploadImages = tryCatch(async (req, res) => {
+  const files = req.files;
+  const result = await brandImageUploadService(files);
+  sendRes(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Brand image upload successfully",
+    data: result,
+  });
+});
+
+exports.deleteImages = tryCatch(async (req, res) => {
+  const { id } = req.params;
+  const files = req.files;
+  const result = await brandImageDeleteService(id, files);
+  sendRes(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Brand image delete successfully",
     data: result,
   });
 });

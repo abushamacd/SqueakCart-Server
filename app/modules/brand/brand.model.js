@@ -8,6 +8,16 @@ const brandSchema = new Schema(
       unique: true,
       lowercase: true,
     },
+    images: [
+      {
+        public_id: {
+          type: String,
+        },
+        url: {
+          type: String,
+        },
+      },
+    ],
   },
   {
     timestamps: true,

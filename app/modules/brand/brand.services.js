@@ -1,8 +1,13 @@
 const {
   calculatePagination,
 } = require("../../../src/helpers/paginationHelpers");
+const {
+  cloudInaryUploadImg,
+  cloudInaryDeleteImg,
+} = require("../../../src/utilities/cloudinary");
 const { brandSearchableFields } = require("./brand.constant");
 const Brand = require("./brand.model");
+const fs = require("fs");
 
 exports.createBrandService = async (payload) => {
   const brand = await Brand.create(payload);
@@ -84,4 +89,25 @@ exports.updateBrandService = async (id, payload) => {
 exports.deleteBrandService = async (id) => {
   const result = await Brand.findByIdAndDelete(id);
   return result;
+};
+
+exports.brandImageUploadService = async (files) => {
+  const uploader = (path) => cloudInaryUploadImg(path, "images");
+  const urls = [];
+  for (const file of files) {
+    const { path } = file;
+    let newPath = await uploader(path);
+    urls.push(newPath);
+    fs.unlinkSync(path);
+  }
+  const images = urls?.map((file) => {
+    return file;
+  });
+
+  return images;
+};
+
+exports.brandImageDeleteService = async (id, files) => {
+  const deleted = await cloudInaryDeleteImg(id, "images");
+  return deleted;
 };

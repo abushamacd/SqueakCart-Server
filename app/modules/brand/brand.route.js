@@ -9,9 +9,43 @@ const {
   getBrand,
   updateBrand,
   deleteBrand,
+  uploadImages,
+  deleteImages,
 } = require("./brand.controller");
+const {
+  uploadFile,
+  brandImageResize,
+} = require("../../../src/middleware/uploadImages");
 
 const router = express.Router();
+
+router
+  .route("/upload-img")
+  /**
+   * @api {post} /upload-img
+   * @apiDescription upload product image
+   * @apiPermission admin
+   */
+  .post(
+    // auth(USER_ROLE.ADMIN),
+    uploadFile.array("images", 10),
+    brandImageResize,
+    uploadImages
+  );
+
+router
+  .route("/delete-img/:id")
+  /**
+   * @api {post} //delete-img/image_id
+   * @apiDescription delete product image
+   * @apiPermission admin
+   */
+  .delete(
+    // auth(USER_ROLE.ADMIN),
+    uploadFile.array("images", 10),
+    brandImageResize,
+    deleteImages
+  );
 
 router
   .route("/")
