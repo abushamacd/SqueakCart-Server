@@ -1,8 +1,13 @@
 const {
   calculatePagination,
 } = require("../../../src/helpers/paginationHelpers");
+const {
+  cloudInaryUploadImg,
+  cloudInaryDeleteImg,
+} = require("../../../src/utilities/cloudinary");
 const { proCatSearchableFields } = require("./proCat.constant");
 const ProCat = require("./proCat.model");
+const fs = require("fs");
 
 exports.createProCatService = async (payload) => {
   const proCat = await ProCat.create(payload);
@@ -84,4 +89,25 @@ exports.updateProCatService = async (id, payload) => {
 exports.deleteProCatService = async (id) => {
   const result = await ProCat.findByIdAndDelete(id);
   return result;
+};
+
+exports.proCatImageUploadService = async (files) => {
+  const uploader = (path) => cloudInaryUploadImg(path, "images");
+  const urls = [];
+  for (const file of files) {
+    const { path } = file;
+    let newPath = await uploader(path);
+    urls.push(newPath);
+    fs.unlinkSync(path);
+  }
+  const images = urls?.map((file) => {
+    return file;
+  });
+
+  return images;
+};
+
+exports.proCatImageDeleteService = async (id, files) => {
+  const deleted = await cloudInaryDeleteImg(id, "images");
+  return deleted;
 };

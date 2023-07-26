@@ -7,6 +7,8 @@ const {
   getProCatService,
   updateProCatService,
   deleteProCatService,
+  proCatImageUploadService,
+  proCatImageDeleteService,
 } = require("./proCat.services");
 const { pick } = require("../../../src/utilities/pick");
 const { proCatFilterableFields } = require("./proCat.constant");
@@ -63,6 +65,29 @@ exports.deleteProCat = tryCatch(async (req, res) => {
     statusCode: httpStatus.OK,
     success: true,
     message: "ProCat delete successfully",
+    data: result,
+  });
+});
+
+exports.uploadImages = tryCatch(async (req, res) => {
+  const files = req.files;
+  const result = await proCatImageUploadService(files);
+  sendRes(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Product image upload successfully",
+    data: result,
+  });
+});
+
+exports.deleteImages = tryCatch(async (req, res) => {
+  const { id } = req.params;
+  const files = req.files;
+  const result = await proCatImageDeleteService(id, files);
+  sendRes(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Product image delete successfully",
     data: result,
   });
 });

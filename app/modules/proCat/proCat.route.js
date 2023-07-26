@@ -9,9 +9,43 @@ const {
   getProCat,
   updateProCat,
   deleteProCat,
+  uploadImages,
+  deleteImages,
 } = require("./proCat.controller");
+const {
+  proCatImageResize,
+  uploadFile,
+} = require("../../../src/middleware/uploadImages");
 
 const router = express.Router();
+
+router
+  .route("/upload-img")
+  /**
+   * @api {post} /upload-img
+   * @apiDescription upload product image
+   * @apiPermission admin
+   */
+  .post(
+    // auth(USER_ROLE.ADMIN),
+    uploadFile.array("images", 10),
+    proCatImageResize,
+    uploadImages
+  );
+
+router
+  .route("/delete-img/:id")
+  /**
+   * @api {post} //delete-img/image_id
+   * @apiDescription delete product image
+   * @apiPermission admin
+   */
+  .delete(
+    // auth(USER_ROLE.ADMIN),
+    uploadFile.array("images", 10),
+    proCatImageResize,
+    deleteImages
+  );
 
 router
   .route("/")
