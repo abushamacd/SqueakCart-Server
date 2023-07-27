@@ -80,7 +80,7 @@ exports.getProductsService = async (paginationOptions, filters) => {
 exports.getProductService = async (id) => {
   const result = await Product.findByIdAndUpdate(
     { _id: id },
-    { $inc: { views: 1 } },
+    { $inc: { view: 1 } },
     { new: true }
   ).populate(productPopulate);
   return result;
