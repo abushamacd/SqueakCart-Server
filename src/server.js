@@ -10,9 +10,9 @@ process.on("uncaughtException", (error) => {
 // DB Connection
 DBConnect();
 
-process.on("SIGTERM", () => {
-  logger.info(`Sigterm is received`);
-  if (server) {
-    server.close();
-  }
-});
+// process.on("SIGTERM", () => {
+//   logger.info(`Sigterm is received`);
+//   if (server) {
+//     server.close();
+//   }
+// });
