@@ -105,7 +105,11 @@ exports.deleteBlogService = async (id) => {
 
 exports.likeBlogService = async (blogId, loginUserId) => {
   const blog = await Blog.findById(blogId);
-  const isLiked = blog?.isLiked;
+
+  const isLiked = blog?.likes.find(
+    (userId) => userId.toString() === loginUserId.toString()
+  );
+
   const alreadyDisliked = blog?.dislikes.find(
     (userId) => userId.toString() === loginUserId.toString()
   );
@@ -115,7 +119,6 @@ exports.likeBlogService = async (blogId, loginUserId) => {
       blogId,
       {
         $pull: { dislikes: loginUserId },
-        isDisliked: false,
       },
       {
         new: true,
@@ -128,7 +131,6 @@ exports.likeBlogService = async (blogId, loginUserId) => {
       blogId,
       {
         $pull: { likes: loginUserId },
-        isLiked: false,
       },
       {
         new: true,
@@ -140,7 +142,6 @@ exports.likeBlogService = async (blogId, loginUserId) => {
       blogId,
       {
         $push: { likes: loginUserId },
-        isLiked: true,
       },
       {
         new: true,
@@ -152,16 +153,18 @@ exports.likeBlogService = async (blogId, loginUserId) => {
 
 exports.dislikeBlogService = async (blogId, loginUserId) => {
   const blog = await Blog.findById(blogId);
-  const isDisliked = blog?.isDisliked;
+  const isDisliked = blog?.dislikes.find(
+    (userId) => userId.toString() === loginUserId.toString()
+  );
   const alreadyLiked = blog?.likes.find(
     (userId) => userId.toString() === loginUserId.toString()
   );
+
   if (alreadyLiked) {
     const blog = await Blog.findByIdAndUpdate(
       blogId,
       {
         $pull: { likes: loginUserId },
-        isLiked: false,
       },
       {
         new: true,
@@ -174,7 +177,6 @@ exports.dislikeBlogService = async (blogId, loginUserId) => {
       blogId,
       {
         $pull: { dislikes: loginUserId },
-        isDisliked: false,
       },
       {
         new: true,
@@ -186,7 +188,6 @@ exports.dislikeBlogService = async (blogId, loginUserId) => {
       blogId,
       {
         $push: { dislikes: loginUserId },
-        isDisliked: true,
       },
       {
         new: true,

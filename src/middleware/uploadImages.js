@@ -85,7 +85,7 @@ exports.blogImageResize = async (req, res, next) => {
   await Promise.all(
     req.files.map(async (file) => {
       await sharp(file.path)
-        .resize(800, 800)
+        .resize(1600, 700)
         .toFormat("jpeg")
         .jpeg({ quality: 90 })
         .toFile(`public/images/blogs/${file.filename}`);

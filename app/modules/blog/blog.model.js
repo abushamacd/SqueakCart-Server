@@ -29,14 +29,6 @@ const blogSchema = new Schema(
       type: Number,
       default: 0,
     },
-    isLiked: {
-      type: Boolean,
-      default: false,
-    },
-    isDisliked: {
-      type: Boolean,
-      default: false,
-    },
     likes: [
       {
         type: Schema.Types.ObjectId,
