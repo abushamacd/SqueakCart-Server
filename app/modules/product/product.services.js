@@ -43,10 +43,7 @@ exports.getProductsService = async (paginationOptions, filters) => {
   if (Object.keys(filtersData).length) {
     andConditions.push({
       $and: Object.entries(filtersData).map(([field, value]) => ({
-        [field]: {
-          $regex: value,
-          $options: "i",
-        },
+        [field]: value,
       })),
     });
   }
@@ -59,6 +56,7 @@ exports.getProductsService = async (paginationOptions, filters) => {
 
   const whereConditions =
     andConditions.length > 0 ? { $and: andConditions } : {};
+
   // output
   const result = await Product.find(whereConditions)
     .populate(productPopulate)

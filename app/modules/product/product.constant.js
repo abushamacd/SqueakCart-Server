@@ -1,4 +1,10 @@
-exports.productFilterableFields = ["searchTerm", "title"];
+exports.productFilterableFields = [
+  "searchTerm",
+  "status",
+  "category",
+  "brand",
+  "color",
+];
 exports.productSearchableFields = ["title"];
 exports.status = ["available", "unavailable"];
 exports.productPopulate = [
