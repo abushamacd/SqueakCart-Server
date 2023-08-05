@@ -4,6 +4,8 @@ exports.productFilterableFields = [
   "category",
   "brand",
   "color",
+  "minPrice",
+  "maxPrice",
 ];
 exports.productSearchableFields = ["title"];
 exports.status = ["available", "unavailable"];

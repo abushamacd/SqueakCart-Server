@@ -24,7 +24,7 @@ exports.createProductService = async (payload) => {
 exports.getProductsService = async (paginationOptions, filters) => {
   const { page, limit, skip, sortBy, sortOrder } =
     calculatePagination(paginationOptions);
-  const { searchTerm, ...filtersData } = filters;
+  const { searchTerm, minPrice, maxPrice, ...filtersData } = filters;
   let andConditions = [];
 
   // search on the field
@@ -52,6 +52,28 @@ exports.getProductsService = async (paginationOptions, filters) => {
   let sortConditions = {};
   if (sortBy && sortOrder) {
     sortConditions[sortBy] = sortOrder;
+  }
+
+  // filter on price
+  if (minPrice && maxPrice) {
+    andConditions.push({
+      price: {
+        $gte: Number(minPrice),
+        $lte: Number(maxPrice),
+      },
+    });
+  } else if (minPrice) {
+    andConditions.push({
+      price: {
+        $gte: Number(minPrice),
+      },
+    });
+  } else if (maxPrice) {
+    andConditions.push({
+      price: {
+        $lte: Number(maxPrice),
+      },
+    });
   }
 
   const whereConditions =
