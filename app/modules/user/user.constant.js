@@ -15,11 +15,7 @@ exports.userPopulate = [
     populate: [
       {
         path: "products",
-        populate: [
-          {
-            path: "productId",
-          },
-        ],
+        populate: ["productId", "color"],
       },
     ],
   },
