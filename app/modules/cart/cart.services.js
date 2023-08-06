@@ -17,18 +17,18 @@ exports.createCartService = async (id, payload) => {
   const allVarients = allProducts.filter(
     (product) => product.productId.valueOf() === productId
   );
-  const remainsVarients = allVarients.filter(
-    (product) => product.color !== color
-  );
 
+  const remainsVarients = allVarients.filter(
+    (product) => product.color.toString() !== color
+  );
   products = [payload, ...remainsVarients];
+
   const remainsProducts = allProducts.filter(
     (obj1) =>
       !products.some(
         (obj2) => obj1.productId.valueOf() === obj2.productId.valueOf()
       )
   );
-
   products = [...products, ...remainsProducts];
 
   let cartTotal = products.reduce(
@@ -42,8 +42,6 @@ exports.createCartService = async (id, payload) => {
     orderBy: id,
   };
 
-  // throw new Error("stop");
-
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
@@ -55,6 +53,7 @@ exports.createCartService = async (id, payload) => {
     const alreadyAdded = user.cart.find(
       (id) => id.toString() === savedCart._id.valueOf().toString()
     );
+
     if (!alreadyAdded) {
       await User.findByIdAndUpdate(
         id,
@@ -67,12 +66,11 @@ exports.createCartService = async (id, payload) => {
       );
     }
 
-    const result = await Cart.findById(savedCart._id).populate(cartPopulate);
-
+    const result = await Cart.findById(savedCart._id);
     return result;
   } catch (error) {
     session.abortTransaction();
-    throw error;
+    throw new Error("Product added failed");
   }
 };
 

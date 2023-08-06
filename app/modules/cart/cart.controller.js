@@ -18,11 +18,10 @@ const { paginationFields } = require("../../../src/constants/pagination");
 exports.createCart = tryCatch(async (req, res) => {
   const { _id } = req?.user;
   const result = await createCartService(_id, req.body);
-  // const result = null;
   sendRes(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Cart created successfully",
+    message: "Product added successfully",
     data: result,
   });
 });

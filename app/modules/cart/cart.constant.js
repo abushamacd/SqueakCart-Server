@@ -6,9 +6,14 @@ exports.cartPopulate = [
   {
     path: "products",
     populate: [
-      {
-        path: "productId",
-      },
+      "productId",
+      "color",
+      // {
+      //   path: "productId",
+      // },
+      // {
+      //   path: "color",
+      // },
     ],
   },
 ];
