@@ -120,7 +120,7 @@ exports.removeFromCartService = async (id, productId, color) => {
     (product) => product.productId.valueOf() === productId
   );
   const remainsVarients = allVarients.filter(
-    (product) => product.color !== color
+    (product) => product.color.toString() !== color
   );
   products = [...remainsVarients];
 
@@ -148,6 +148,11 @@ exports.removeFromCartService = async (id, productId, color) => {
       new: true,
     }
   ).populate(cartPopulate);
+
+  if (!result) {
+    throw new Error("Remove item failed");
+  }
+
   return result;
 };
 

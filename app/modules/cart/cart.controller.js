@@ -56,7 +56,7 @@ exports.removeFromCart = tryCatch(async (req, res) => {
   sendRes(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Remove this varient successfully",
+    message: "Remove item successfully",
     data: result,
   });
 });
