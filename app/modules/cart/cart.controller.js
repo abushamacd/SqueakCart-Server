@@ -69,7 +69,7 @@ exports.handleQuantity = tryCatch(async (req, res) => {
   sendRes(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Remove this varient successfully",
+    message: "Quantity update successfully",
     data: result,
   });
 });

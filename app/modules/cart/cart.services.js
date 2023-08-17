@@ -1,4 +1,4 @@
-const { default: mongoose } = require("mongoose");
+const { default: mongoose, Error } = require("mongoose");
 const {
   calculatePagination,
 } = require("../../../src/helpers/paginationHelpers");
@@ -13,6 +13,7 @@ exports.createCartService = async (id, payload) => {
   const user = await User.findById(id);
   const userCart = await Cart.findOne({ orderBy: id });
   const allProducts = userCart ? userCart.products : [];
+  payload.cartPositon = allProducts.length;
 
   const allVarients = allProducts.filter(
     (product) => product.productId.valueOf() === productId
@@ -158,19 +159,21 @@ exports.handleQuantityService = async (id, productId, payload) => {
   const allVarients = allProducts.filter(
     (product) => product.productId.valueOf() === productId
   );
+
   const remainsVarients = allVarients.filter(
-    (product) => product.color !== color
+    (product) => product.color.toString() !== color
   );
   products = [...remainsVarients];
+
   const matchVarients = allVarients.filter(
-    (product) => product.color === color
+    (product) => product.color.toString() === color
   );
 
   // quantity handle
   if (status === "increase") {
     matchVarients[0].count += 1;
     products = [...products, ...matchVarients];
-  } else {
+  } else if (status === "decrease") {
     if (matchVarients[0].count > 1) {
       matchVarients[0].count -= 1;
       products = [...products, ...matchVarients];
