@@ -32,3 +32,11 @@ exports.createOrderService = async (userId, payload) => {
   }
   return result;
 };
+
+exports.getUserOrdersService = async (userId) => {
+  const result = await Order.find({ orderBy: userId }).populate(orderPopulate);
+  if (!result) {
+    throw new Error("Order place failed");
+  }
+  return result;
+};

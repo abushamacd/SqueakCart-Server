@@ -4,6 +4,7 @@ const { tryCatch } = require("../../../src/utilities/tryCatch");
 const {
   createPaymentIntentService,
   createOrderService,
+  getUserOrdersService,
 } = require("./order.services");
 const { pick } = require("../../../src/utilities/pick");
 const { orderFilterableFields } = require("./order.constant");
@@ -23,11 +24,21 @@ exports.createOrder = tryCatch(async (req, res) => {
   const { _id } = req.user;
   const { data } = req.body;
   const result = await createOrderService(_id, data);
-  // const result = null;
   sendRes(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: "Place Order successfully",
+    data: result,
+  });
+});
+
+exports.getUserOrders = tryCatch(async (req, res) => {
+  const { _id } = req.user;
+  const result = await getUserOrdersService(_id);
+  sendRes(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Order retrive successfully",
     data: result,
   });
 });

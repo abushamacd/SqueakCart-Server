@@ -5,15 +5,6 @@ exports.orderPopulate = [
   "orderBy",
   {
     path: "products",
-    populate: [
-      "productId",
-      "color",
-      // {
-      //   path: "productId",
-      // },
-      // {
-      //   path: "color",
-      // },
-    ],
+    populate: ["product", "color"],
   },
 ];
