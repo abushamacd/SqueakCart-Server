@@ -12,6 +12,7 @@ const blogRoute = require("../modules/blog/blog.route");
 const productRoute = require("../modules/product/product.route");
 const addressRoute = require("../modules/address/address.route");
 const cartRoute = require("../modules/cart/cart.route");
+const orderRoute = require("../modules/order/order.route");
 
 const appRoutes = [
   {
@@ -61,6 +62,10 @@ const appRoutes = [
   {
     path: "/cart",
     route: cartRoute,
+  },
+  {
+    path: "/order",
+    route: orderRoute,
   },
 ];
 
