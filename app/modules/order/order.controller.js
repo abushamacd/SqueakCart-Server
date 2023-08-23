@@ -5,6 +5,9 @@ const {
   createPaymentIntentService,
   createOrderService,
   getUserOrdersService,
+  getOrdersService,
+  updateOrderService,
+  deleteOrderService,
 } = require("./order.services");
 const { pick } = require("../../../src/utilities/pick");
 const { orderFilterableFields } = require("./order.constant");
@@ -38,7 +41,41 @@ exports.getUserOrders = tryCatch(async (req, res) => {
   sendRes(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Order retrive successfully",
+    message: "Orders retrive successfully",
+    data: result,
+  });
+});
+
+exports.getOrders = tryCatch(async (req, res) => {
+  const paginationOptions = pick(req.query, paginationFields);
+  const filters = pick(req.query, orderFilterableFields);
+  const result = await getOrdersService(paginationOptions, filters);
+  sendRes(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Orders retrive successfully",
+    data: result,
+  });
+});
+
+exports.updateOrder = tryCatch(async (req, res) => {
+  const { id } = req.params;
+  const result = await updateOrderService(id, req.body);
+  sendRes(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Order update successfully",
+    data: result,
+  });
+});
+
+exports.deleteOrder = tryCatch(async (req, res) => {
+  const { id } = req.params;
+  const result = await deleteOrderService(id);
+  sendRes(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Order delete successfully",
     data: result,
   });
 });

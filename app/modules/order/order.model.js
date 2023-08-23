@@ -1,4 +1,5 @@
 const { Schema, model } = require("mongoose");
+const { orderStatus } = require("./order.constant");
 
 const orderSchema = new Schema(
   {
@@ -35,13 +36,7 @@ const orderSchema = new Schema(
     orderStatus: {
       type: String,
       default: "Not Processed",
-      enum: [
-        "Not Processed",
-        "Processing",
-        "On Currier",
-        "Delivered",
-        "Cancelled",
-      ],
+      enum: orderStatus,
     },
     orderBy: {
       type: Schema.Types.ObjectId,
