@@ -16,6 +16,7 @@ const {
   getUserProfile,
   blockUser,
   unblockUser,
+  removeFromWishList,
 } = require("./user.controller");
 const { USER_ROLE } = require("../../../src/constants/user");
 const { auth } = require("../../../src/middleware/auth");
@@ -31,7 +32,20 @@ router
   .get(auth(USER_ROLE.ADMIN, USER_ROLE.USER), getUserProfile);
 
 router
-  .route("/wishlist")
+  .route("/removewishlist")
+  /**
+   * @api {patch} /wishlist
+   * @apiDescription add product to wishlist
+   * @apiPermission all
+   **/
+  .patch(
+    auth(USER_ROLE.ADMIN, USER_ROLE.USER),
+    reqValidate(wishlistZod),
+    removeFromWishList
+  );
+
+router
+  .route("/addwishlist")
   /**
    * @api {patch} /wishlist
    * @apiDescription add product to wishlist

@@ -141,16 +141,17 @@ exports.addToWishListService = async (id, productId) => {
     (id) => id.toString() === productId.toString()
   );
   if (alreadyAdded) {
-    let user = await User.findByIdAndUpdate(
-      id,
-      {
-        $pull: { wishlist: productId },
-      },
-      {
-        new: true,
-      }
-    ).populate(userPopulate);
-    return user;
+    // let user = await User.findByIdAndUpdate(
+    //   id,
+    //   {
+    //     $pull: { wishlist: productId },
+    //   },
+    //   {
+    //     new: true,
+    //   }
+    // ).populate(userPopulate);
+    // return user;
+    throw new Error("Already added");
   } else {
     let user = await User.findByIdAndUpdate(
       id,
@@ -162,6 +163,27 @@ exports.addToWishListService = async (id, productId) => {
       }
     ).populate(userPopulate);
     return user;
+  }
+};
+
+exports.removeFromWishListService = async (id, productId) => {
+  const user = await User.findById(id);
+  const alreadyAdded = user.wishlist.find(
+    (id) => id.toString() === productId.toString()
+  );
+  if (alreadyAdded) {
+    let user = await User.findByIdAndUpdate(
+      id,
+      {
+        $pull: { wishlist: productId },
+      },
+      {
+        new: true,
+      }
+    ).populate(userPopulate);
+    return user;
+  } else {
+    throw new Error("Already remove");
   }
 };
 
