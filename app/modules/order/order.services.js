@@ -2,8 +2,6 @@ const { default: mongoose, Error } = require("mongoose");
 const {
   calculatePagination,
 } = require("../../../src/helpers/paginationHelpers");
-const Product = require("../product/product.model");
-const User = require("../user/user.model");
 const { orderSearchableFields, orderPopulate } = require("./order.constant");
 const Order = require("./order.model");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
@@ -12,7 +10,7 @@ exports.createPaymentIntentService = async ({ total }) => {
   const price = parseFloat(total);
   const amount = price * 100;
   const paymentIntent = await stripe.paymentIntents.create({
-    amount: amount,
+    amount: parseInt(amount),
     currency: "usd",
     payment_method_types: ["card"],
   });
