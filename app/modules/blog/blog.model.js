@@ -41,6 +41,19 @@ const blogSchema = new Schema(
         ref: "User",
       },
     ],
+    comments: [
+      {
+        comment: {
+          type: String,
+        },
+        name: {
+          type: String,
+        },
+        email: {
+          type: String,
+        },
+      },
+    ],
     images: {
       type: Array,
     },

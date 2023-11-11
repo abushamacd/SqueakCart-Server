@@ -88,10 +88,28 @@ exports.getBlogService = async (id) => {
 };
 
 exports.updateBlogService = async (id, payload) => {
-  const result = await Blog.findByIdAndUpdate(id, payload, {
-    new: true,
-  }).populate(blogPopulate);
-  return result;
+  if (payload.comment) {
+    const reviewedBlog = await Blog.findByIdAndUpdate(
+      id,
+      {
+        $push: {
+          comments: {
+            comment: payload?.comment,
+            name: payload?.name,
+            email: payload?.email,
+          },
+        },
+      },
+      {
+        new: true,
+      }
+    );
+  } else {
+    const result = await Blog.findByIdAndUpdate(id, payload, {
+      new: true,
+    }).populate(blogPopulate);
+    return result;
+  }
 };
 
 exports.deleteBlogService = async (id) => {

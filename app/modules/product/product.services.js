@@ -140,7 +140,7 @@ exports.productImageDeleteService = async (id, files) => {
 };
 
 exports.ratingService = async (id, payload) => {
-  const { star, productId, comment } = payload;
+  const { star, productId, review } = payload;
   const product = await Product.findById(productId);
   let aleardyRated = product.ratings.find(
     (userId) => userId.postedby.toString() === id.toString()
@@ -152,7 +152,7 @@ exports.ratingService = async (id, payload) => {
         ratings: { $elemMatch: aleardyRated },
       },
       {
-        $set: { "ratings.$.star": star, "ratings.$.comment": comment },
+        $set: { "ratings.$.star": star, "ratings.$.review": review },
       },
       {
         new: true,
@@ -165,7 +165,7 @@ exports.ratingService = async (id, payload) => {
         $push: {
           ratings: {
             star: star,
-            comment: comment,
+            review: review,
             postedby: id,
           },
         },
