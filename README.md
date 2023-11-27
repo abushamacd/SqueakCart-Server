@@ -43,7 +43,7 @@ Pre-requirements
 
 ```bash
 # Clone the repository
-https://github.com/abushamacd/SqueakCart-Server.git
+git clone https://github.com/abushamacd/SqueakCart-Server.git
 
 # Navigate to the project directory
 cd SqueakCart-Server
