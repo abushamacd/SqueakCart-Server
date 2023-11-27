@@ -1,7 +1,7 @@
 {
-  "name": "node_express_mongoose_boilerplate",
+  "name": "squeak_cart_backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "This is an e-commerce website backend which I build in javascript language using NodeJS and ExpressJs. Here I follow modular pattern because modular pattern easy to debug and use MongoDB for database, JWT for secutiry purpose, cloudinary for media management, zod for data validation and winston for log and many more.",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server",
@@ -28,6 +28,6 @@
     "winston-daily-rotate-file": "^4.7.1",
     "zod": "^3.21.4"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "Abu Shama",
+  "license": "MIT"
 }
